@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>App Icon Library</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --border: 0.5px solid #e0e0e0;
+      --black: #0f0f0f;
+      --gray: #888;
+      --light-gray: #aaa;
+      --bg: #fff;
+      --card-bg: #efefef;
+      --pill-bg: #f0f0f0;
+      --font: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', sans-serif;
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--black);
+      font-size: 14px;
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ─────────────────────────────────────── */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      height: 56px;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--black);
+    }
+
+    .logo-icon {
+      width: 22px;
+      height: 22px;
+      background: var(--black);
+      border-radius: 5px;
+      flex-shrink: 0;
+    }
+
+    .search-pill {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--pill-bg);
+      border-radius: 99px;
+      padding: 8px 16px;
+      width: 220px;
+      cursor: text;
+    }
+
+    .search-pill svg { flex-shrink: 0; color: var(--gray); }
+
+    .search-pill input {
+      border: none;
+      outline: none;
+      font-size: 13.5px;
+      font-family: var(--font);
+      width: 100%;
+      background: transparent;
+      color: var(--black);
+    }
+
+    .search-pill input::placeholder { color: var(--light-gray); }
+
+    /* ── PAGE BODY ───────────────────────────────── */
+    .page {
+      padding: 24px 40px 60px;
+      max-width: 1280px;
+    }
+
+    /* ── FILTERS SECTION ─────────────────────────── */
+    .filters {
+      display: grid;
+      grid-template-columns: 220px 220px;
+      gap: 0 40px;
+      margin-bottom: 40px;
+    }
+
+    .filter-col-label {
+      font-size: 13px;
+      color: var(--light-gray);
+      font-weight: 400;
+      margin-bottom: 10px;
+    }
+
+    .filter-list {
+      list-style: none;
+    }
+
+    .filter-list li + li { margin-top: 2px; }
+
+    .filter-list a {
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 400;
+      color: var(--black);
+      cursor: pointer;
+      display: inline-block;
+      padding: 1.5px 0;
+      transition: opacity 0.12s;
+      opacity: 0.38;
+    }
+
+    .filter-list a:hover { opacity: 0.65; }
+    .filter-list a.active { opacity: 1; font-weight: 600; }
+
+    /* ── TABS ────────────────────────────────────── */
+    .tabs {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 24px;
+      align-items: baseline;
+    }
+
+    .tab {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--light-gray);
+      cursor: pointer;
+      padding-bottom: 3px;
+      border-bottom: 1.5px solid transparent;
+      transition: color 0.12s;
+      user-select: none;
+    }
+
+    .tab.active {
+      color: var(--black);
+      font-weight: 600;
+      border-bottom-color: var(--black);
+    }
+
+    .tab:hover:not(.active) { color: #555; }
+
+    /* ── GRID ────────────────────────────────────── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px 16px;
+    }
+
+    /* ── CARD ────────────────────────────────────── */
+    .card {
+      cursor: pointer;
+    }
+
+    .card-thumb {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 26%;
+      overflow: hidden;
+      background: var(--card-bg);
+      margin-bottom: 13px;
+      position: relative;
+    }
+
+    .card-thumb.loading::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #ebebeb 25%, #e2e2e2 50%, #ebebeb 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+    }
+
+    @keyframes shimmer {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .card-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 0 2px;
+    }
+
+    .card-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--black);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .badge-new {
+      flex-shrink: 0;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--black);
+      background: var(--bg);
+      border: 0.5px solid #c8c8c8;
+      padding: 2.5px 9px;
+      border-radius: 99px;
+    }
+
+    /* ── EMPTY ───────────────────────────────────── */
+    .grid-empty {
+      grid-column: 1 / -1;
+      padding: 80px 24px;
+      text-align: center;
+      color: var(--light-gray);
+      font-size: 14px;
+    }
+
+    /* ── MODAL BACKDROP ──────────────────────────── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.35);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.18s, visibility 0.18s;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* ── MODAL ───────────────────────────────────── */
+    .modal {
+      background: var(--bg);
+      border-radius: 18px;
+      width: 860px;
+      max-width: 100%;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transform: translateY(8px) scale(0.99);
+      transition: transform 0.18s;
+    }
+
+    .modal-overlay.open .modal {
+      transform: translateY(0) scale(1);
+    }
+
+    /* Modal header */
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 22px 28px 0;
+    }
+
+    .modal-header-left {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: -0.015em;
+    }
+
+    .modal-logo-icon {
+      width: 22px;
+      height: 22px;
+      background: var(--black);
+      border-radius: 5px;
+      flex-shrink: 0;
+    }
+
+    .modal-header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 99px;
+      background: var(--pill-bg);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gray);
+      transition: background 0.1s, color 0.1s;
+    }
+
+    .icon-btn:hover { background: #e6e6e6; color: var(--black); }
+
+    /* Modal icon area */
+    .modal-icon-area {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 36px 48px 28px;
+    }
+
+    .modal-icon-wrap {
+      width: 340px;
+      height: 340px;
+      border-radius: 26%;
+      overflow: hidden;
+      background: var(--card-bg);
+    }
+
+    .modal-icon-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Modal footer */
+    .modal-footer {
+      border-top: var(--border);
+      padding: 18px 28px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    /* Found in — left */
+    .footer-found {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+      min-width: 0;
+      flex-wrap: wrap;
+    }
+
+    .footer-found-label {
+      font-size: 13.5px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .tag {
+      font-size: 12.5px;
+      font-weight: 400;
+      color: var(--black);
+      background: var(--pill-bg);
+      padding: 5px 12px;
+      border-radius: 99px;
+      white-space: nowrap;
+    }
+
+    /* Buttons — center */
+    .footer-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .footer-btn {
+      font-size: 13.5px;
+      font-weight: 500;
+      padding: 8px 18px;
+      border-radius: 99px;
+      border: 0.5px solid #d0d0d0;
+      background: var(--bg);
+      cursor: pointer;
+      font-family: var(--font);
+      color: var(--black);
+      transition: background 0.1s;
+    }
+
+    .footer-btn:hover { background: var(--pill-bg); }
+
+    /* More info — right */
+    .footer-more {
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--black);
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .footer-more:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ─────────────────────────────────────── -->
+<nav>
+  <div class="nav-logo">
+    <div class="logo-icon"></div>
+    App Icon Library
+  </div>
+  <div class="search-pill">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8">
+      <circle cx="6.5" cy="6.5" r="5.2"/><path d="M11 11l3.2 3.2" stroke-linecap="round"/>
+    </svg>
+    <input type="text" id="searchInput" placeholder="Search App Icons" autocomplete="off" spellcheck="false">
+  </div>
+</nav>
+
+<!-- ── PAGE ─────────────────────────────────────── -->
+<div class="page">
+
+  <!-- Filters -->
+  <div class="filters">
+    <!-- Categories -->
+    <div>
+      <div class="filter-col-label">Categories</div>
+      <ul class="filter-list" id="categoryList">
+        <li><a class="active" data-value="all" href="#">All</a></li>
+        <li><a data-value="Travel" href="#">Travel &amp; transportation</a></li>
+        <li><a data-value="Food & Drink" href="#">Food &amp; Drink</a></li>
+        <li><a data-value="Finance" href="#">Finance</a></li>
+        <li><a data-value="Education" href="#">Education</a></li>
+        <li><a data-value="Business" href="#">Business</a></li>
+      </ul>
+    </div>
+
+    <!-- Style -->
+    <div>
+      <div class="filter-col-label">Style</div>
+      <ul class="filter-list" id="styleList">
+        <li><a class="active" data-value="all" href="#">All</a></li>
+        <li><a data-value="Flat" href="#">Flat</a></li>
+        <li><a data-value="Illustrated" href="#">Illustrated</a></li>
+        <li><a data-value="3D" href="#">3D</a></li>
+        <li><a data-value="Typographic" href="#">Typographic</a></li>
+        <li><a data-value="Gradients" href="#">Gradients</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <div class="tab active" data-tab="latest">Latest</div>
+    <div class="tab" data-tab="popular">Most popular</div>
+  </div>
+
+  <!-- Grid -->
+  <div class="grid" id="grid"></div>
+
+</div>
+
+<!-- ── MODAL ─────────────────────────────────────── -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modal">
+
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <div class="modal-logo-icon"></div>
+        <span id="modalTitle">App Icon Name</span>
+      </div>
+      <div class="modal-header-right">
+        <button class="icon-btn" id="copyLinkBtn" title="Copy link">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6">
+            <path d="M6.5 9.5a3.5 3.5 0 0 0 5 0l2-2a3.5 3.5 0 0 0-5-5l-1 1" stroke-linecap="round"/>
+            <path d="M9.5 6.5a3.5 3.5 0 0 0-5 0l-2 2a3.5 3.5 0 0 0 5 5l1-1" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <button class="icon-btn" id="modalClose" title="Close">
+          <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+            <path d="M1 1l10 10M11 1L1 11"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="modal-icon-area">
+      <div class="modal-icon-wrap">
+        <img id="modalImg" src="" alt="">
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <!-- Found in -->
+      <div class="footer-found">
+        <span class="footer-found-label">Found in</span>
+        <div id="modalTags" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
+      </div>
+
+      <!-- Actions -->
+      <div class="footer-actions">
+        <button class="footer-btn" id="copyBtn">Copy</button>
+        <button class="footer-btn" id="downloadBtn">Download PNG</button>
+      </div>
+
+      <!-- More info -->
+      <div class="footer-more" id="moreInfo">More info</div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────────────────
+//  APP DATA  — edit this array to add / remove apps
+// ─────────────────────────────────────────────────────────
+const APPS = [
+  { name: 'Airbnb',      category: 'Travel',       tags: ['Flat', 'Typographic'],      isNew: false, popularity: 9  },
+  { name: 'Uber',        category: 'Travel',       tags: ['Flat', 'Typographic'],      isNew: false, popularity: 10 },
+  { name: 'Deliveroo',   category: 'Food & Drink', tags: ['Illustrated', 'Flat'],      isNew: true,  popularity: 7  },
+  { name: 'Yelp',        category: 'Food & Drink', tags: ['Flat', 'Gradients'],        isNew: false, popularity: 6  },
+  { name: 'Robinhood',   category: 'Finance',      tags: ['Flat', 'Illustrated'],      isNew: true,  popularity: 8  },
+  { name: 'Monzo',       category: 'Finance',      tags: ['Flat', 'Typographic'],      isNew: true,  popularity: 7  },
+  { name: 'Revolut',     category: 'Finance',      tags: ['Flat', 'Gradients'],        isNew: false, popularity: 8  },
+  { name: 'Duolingo',    category: 'Education',    tags: ['Illustrated', '3D'],        isNew: false, popularity: 9  },
+  { name: 'Notion',      category: 'Business',     tags: ['Flat', 'Typographic'],      isNew: false, popularity: 9  },
+  { name: 'Linear',      category: 'Business',     tags: ['Flat', 'Typographic'],      isNew: true,  popularity: 7  },
+  { name: 'Slack',       category: 'Business',     tags: ['Flat', 'Illustrated'],      isNew: false, popularity: 10 },
+  { name: 'Headspace',   category: 'Education',    tags: ['Illustrated', 'Flat'],      isNew: false, popularity: 7  },
+  { name: 'Calm',        category: 'Education',    tags: ['Gradients', 'Illustrated'], isNew: false, popularity: 7  },
+  { name: 'Waze',        category: 'Travel',       tags: ['Illustrated', 'Flat'],      isNew: false, popularity: 8  },
+  { name: 'Citymapper',  category: 'Travel',       tags: ['Flat'],                     isNew: true,  popularity: 6  },
+  { name: 'Hopper',      category: 'Travel',       tags: ['Illustrated', 'Gradients'], isNew: true,  popularity: 6  },
+];
+
+// ─────────────────────────────────────────────────────────
+//  STATE
+// ─────────────────────────────────────────────────────────
+const cache        = {};
+let activeCategory = 'all';
+let activeStyle    = 'all';
+let activeTab      = 'latest';
+let searchQuery    = '';
+let selectedApp    = null;
+
+// ─────────────────────────────────────────────────────────
+//  FETCH ICON
+// ─────────────────────────────────────────────────────────
+async function fetchIcon(name) {
+  if (name in cache) return cache[name];
+  try {
+    const r    = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(name)}&entity=software&limit=1`);
+    const data = await r.json();
+    const url  = data.results?.[0]?.artworkUrl512 ?? null;
+    cache[name] = url;
+    return url;
+  } catch {
+    cache[name] = null;
+    return null;
+  }
+}
+
+// Pre-fetch all icons eagerly
+APPS.forEach(a => fetchIcon(a.name));
+
+// ─────────────────────────────────────────────────────────
+//  FILTER
+// ─────────────────────────────────────────────────────────
+function getVisible() {
+  let list = APPS.slice();
+  if (activeCategory !== 'all') list = list.filter(a => a.category === activeCategory);
+  if (activeStyle    !== 'all') list = list.filter(a => a.tags.includes(activeStyle));
+  if (searchQuery)              list = list.filter(a => a.name.toLowerCase().includes(searchQuery));
+
+  if (activeTab === 'popular') {
+    list.sort((a, b) => b.popularity - a.popularity);
+  } else {
+    // Latest: new items first, then rest in original order
+    list.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0));
+  }
+  return list;
+}
+
+// ─────────────────────────────────────────────────────────
+//  RENDER
+// ─────────────────────────────────────────────────────────
+function renderGrid() {
+  const grid = document.getElementById('grid');
+  const apps = getVisible();
+  grid.innerHTML = '';
+
+  if (!apps.length) {
+    grid.innerHTML = '<div class="grid-empty">No apps match your filters.</div>';
+    return;
+  }
+
+  apps.forEach(app => {
+    const safeId = `thumb-${app.name.replace(/[^a-z0-9]/gi, '_')}`;
+    const card   = document.createElement('div');
+    card.className = 'card';
+
+    card.innerHTML = `
+      <div class="card-thumb loading" id="${safeId}"></div>
+      <div class="card-meta">
+        <span class="card-name">${app.name}</span>
+        ${app.isNew ? '<span class="badge-new">New</span>' : ''}
+      </div>`;
+
+    card.addEventListener('click', () => openModal(app));
+    grid.appendChild(card);
+
+    const thumbEl = () => document.getElementById(safeId);
+    if (app.name in cache) {
+      applyThumb(thumbEl(), cache[app.name]);
+    } else {
+      fetchIcon(app.name).then(url => applyThumb(thumbEl(), url));
+    }
+  });
+}
+
+function applyThumb(el, url) {
+  if (!el) return;
+  el.classList.remove('loading');
+  el.innerHTML = url ? `<img src="${url}" alt="" loading="lazy">` : '';
+}
+
+// ─────────────────────────────────────────────────────────
+//  MODAL
+// ─────────────────────────────────────────────────────────
+function openModal(app) {
+  selectedApp = app;
+
+  document.getElementById('modalTitle').textContent = app.name;
+  document.getElementById('modalTags').innerHTML    = app.tags.map(t => `<span class="tag">${t}</span>`).join('');
+  document.getElementById('copyBtn').textContent    = 'Copy';
+
+  const img = document.getElementById('modalImg');
+  img.src   = cache[app.name] || '';
+  if (!(app.name in cache)) {
+    fetchIcon(app.name).then(url => { if (url) img.src = url; });
+  }
+
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+  selectedApp = null;
+}
+
+// ─────────────────────────────────────────────────────────
+//  COPY / DOWNLOAD
+// ─────────────────────────────────────────────────────────
+async function copyAction() {
+  if (!selectedApp) return;
+  const url = cache[selectedApp.name];
+  if (!url) return;
+  const btn = document.getElementById('copyBtn');
+  try {
+    const blob = await fetch(url).then(r => r.blob());
+    await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+    btn.textContent = 'Copied!';
+  } catch {
+    try {
+      await navigator.clipboard.writeText(url);
+      btn.textContent = 'URL Copied';
+    } catch {
+      btn.textContent = 'Failed';
+    }
+  }
+  setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+}
+
+async function downloadAction() {
+  if (!selectedApp) return;
+  const url = cache[selectedApp.name];
+  if (!url) return;
+  try {
+    const blob = await fetch(url).then(r => r.blob());
+    const a    = document.createElement('a');
+    a.href     = URL.createObjectURL(blob);
+    a.download = `${selectedApp.name.toLowerCase().replace(/\s+/g, '-')}-icon.png`;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+  } catch {
+    window.open(url, '_blank');
+  }
+}
+
+// ─────────────────────────────────────────────────────────
+//  EVENT WIRING
+// ─────────────────────────────────────────────────────────
+function bindFilterList(id, setter) {
+  document.getElementById(id).addEventListener('click', e => {
+    e.preventDefault();
+    const a = e.target.closest('a[data-value]');
+    if (!a) return;
+    document.querySelectorAll(`#${id} a`).forEach(x => x.classList.remove('active'));
+    a.classList.add('active');
+    setter(a.dataset.value);
+    renderGrid();
+  });
+}
+
+bindFilterList('categoryList', v => { activeCategory = v; });
+bindFilterList('styleList',    v => { activeStyle    = v; });
+
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    activeTab = tab.dataset.tab;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    renderGrid();
+  });
+});
+
+let searchTimer;
+document.getElementById('searchInput').addEventListener('input', e => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => {
+    searchQuery = e.target.value.trim().toLowerCase();
+    renderGrid();
+  }, 160);
+});
+
+document.getElementById('modalClose').addEventListener('click', closeModal);
+document.getElementById('modalOverlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+document.getElementById('copyBtn').addEventListener('click', copyAction);
+document.getElementById('downloadBtn').addEventListener('click', downloadAction);
+
+document.getElementById('copyLinkBtn').addEventListener('click', () => {
+  if (selectedApp) navigator.clipboard.writeText(window.location.href + '#' + selectedApp.name.toLowerCase());
+});
+
+// ─────────────────────────────────────────────────────────
+//  INIT
+// ─────────────────────────────────────────────────────────
+renderGrid();
+
+// Final re-render once all icons are loaded
+Promise.allSettled(APPS.map(a => fetchIcon(a.name))).then(() => renderGrid());
+</script>
+</body>
+</html>
