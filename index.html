@@ -36,6 +36,8 @@
       height: 56px;
       margin: 0 auto;
       max-width: 1280px;
+      border-bottom: var(--border);
+      position: relative;
     }
 
     .nav-logo {
@@ -46,6 +48,7 @@
       font-weight: 600;
       letter-spacing: -0.02em;
       color: var(--black);
+      flex-shrink: 0;
     }
 
     .logo-icon {
@@ -56,6 +59,13 @@
       flex-shrink: 0;
     }
 
+    /* centered search */
+    .nav-search {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
     .search-pill {
       display: flex;
       align-items: center;
@@ -63,8 +73,9 @@
       background: var(--pill-bg);
       border-radius: 99px;
       padding: 8px 16px;
-      width: 220px;
+      width: 240px;
       cursor: text;
+      transition: width 0.2s;
     }
 
     .search-pill svg { flex-shrink: 0; color: var(--gray); }
@@ -81,14 +92,204 @@
 
     .search-pill input::placeholder { color: var(--light-gray); }
 
+    /* OS switcher */
+    .os-switcher {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .os-btn {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--light-gray);
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: var(--font);
+      padding: 0;
+      transition: color 0.1s;
+    }
+
+    .os-btn.active {
+      color: var(--black);
+      font-weight: 600;
+    }
+
+    .os-btn:hover:not(.active) { color: #555; }
+
+    /* ── SEARCH OVERLAY ──────────────────────────── */
+    .search-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      background: rgba(0,0,0,0.35);
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 0;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.15s, visibility 0.15s;
+    }
+
+    .search-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .search-modal {
+      background: var(--bg);
+      border-radius: 18px;
+      width: 860px;
+      max-width: calc(100vw - 48px);
+      margin-top: 60px;
+      overflow: hidden;
+      transform: translateY(-6px);
+      transition: transform 0.15s;
+      max-height: calc(100vh - 100px);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .search-overlay.open .search-modal {
+      transform: translateY(0);
+    }
+
+    .search-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      border-bottom: var(--border);
+      flex-shrink: 0;
+    }
+
+    .search-modal-input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--pill-bg);
+      border-radius: 99px;
+      padding: 9px 16px;
+      flex: 1;
+      max-width: 340px;
+    }
+
+    .search-modal-input-wrap svg { color: var(--gray); flex-shrink: 0; }
+
+    .search-modal-input-wrap input {
+      border: none;
+      outline: none;
+      font-size: 14px;
+      font-family: var(--font);
+      background: transparent;
+      color: var(--black);
+      width: 100%;
+    }
+
+    .search-modal-input-wrap input::placeholder { color: var(--light-gray); }
+
+    .search-modal-os {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .search-close-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 99px;
+      background: var(--pill-bg);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gray);
+      transition: background 0.1s;
+      margin-left: 16px;
+    }
+
+    .search-close-btn:hover { background: #e6e6e6; color: var(--black); }
+
+    .search-modal-body {
+      padding: 28px 28px 32px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    /* Empty state — browse by category/style */
+    .search-browse {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 0;
+    }
+
+    .search-browse-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding-right: 24px;
+    }
+
+    .search-browse-nav-item {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--light-gray);
+      cursor: pointer;
+      padding: 4px 10px;
+      border-radius: 8px;
+      transition: all 0.1s;
+    }
+
+    .search-browse-nav-item.active {
+      background: var(--pill-bg);
+      color: var(--black);
+      font-weight: 600;
+    }
+
+    .search-browse-nav-item:hover:not(.active) { color: #555; }
+
+    .search-browse-items {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .search-browse-item {
+      font-size: 15px;
+      color: var(--black);
+      cursor: pointer;
+      padding: 3px 0;
+      font-weight: 500;
+      transition: opacity 0.1s;
+    }
+
+    .search-browse-item:hover { opacity: 0.6; }
+
+    /* Results state */
+    .search-results-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px 16px;
+    }
+
+    .search-empty-msg {
+      color: var(--light-gray);
+      font-size: 14px;
+      padding: 40px 0;
+      text-align: center;
+    }
+
     /* ── PAGE BODY ───────────────────────────────── */
     .page {
-      padding: 24px 40px 60px;
+      padding: 32px 40px 60px;
       max-width: 1280px;
       margin: 0 auto;
     }
 
-    /* ── FILTERS SECTION ─────────────────────────── */
+    /* ── FILTERS ─────────────────────────────────── */
     .filters {
       display: grid;
       grid-template-columns: 220px 220px;
@@ -103,10 +304,7 @@
       margin-bottom: 10px;
     }
 
-    .filter-list {
-      list-style: none;
-    }
-
+    .filter-list { list-style: none; }
     .filter-list li + li { margin-top: 2px; }
 
     .filter-list a {
@@ -143,12 +341,7 @@
       user-select: none;
     }
 
-    .tab.active {
-      color: var(--black);
-      font-weight: 600;
-      border-bottom-color: var(--black);
-    }
-
+    .tab.active { color: var(--black); font-weight: 600; border-bottom-color: var(--black); }
     .tab:hover:not(.active) { color: #555; }
 
     /* ── GRID ────────────────────────────────────── */
@@ -159,9 +352,7 @@
     }
 
     /* ── CARD ────────────────────────────────────── */
-    .card {
-      cursor: pointer;
-    }
+    .card { cursor: pointer; }
 
     .card-thumb {
       width: 100%;
@@ -247,10 +438,7 @@
       transition: opacity 0.18s, visibility 0.18s;
     }
 
-    .modal-overlay.open {
-      opacity: 1;
-      visibility: visible;
-    }
+    .modal-overlay.open { opacity: 1; visibility: visible; }
 
     /* ── MODAL ───────────────────────────────────── */
     .modal {
@@ -266,11 +454,8 @@
       transition: transform 0.18s;
     }
 
-    .modal-overlay.open .modal {
-      transform: translateY(0) scale(1);
-    }
+    .modal-overlay.open .modal { transform: translateY(0) scale(1); }
 
-    /* Modal header */
     .modal-header {
       display: flex;
       align-items: center;
@@ -295,11 +480,7 @@
       flex-shrink: 0;
     }
 
-    .modal-header-right {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+    .modal-header-right { display: flex; align-items: center; gap: 8px; }
 
     .icon-btn {
       width: 32px;
@@ -317,7 +498,6 @@
 
     .icon-btn:hover { background: #e6e6e6; color: var(--black); }
 
-    /* Modal icon area */
     .modal-icon-area {
       flex: 1;
       display: flex;
@@ -341,7 +521,6 @@
       display: block;
     }
 
-    /* Modal footer */
     .modal-footer {
       border-top: var(--border);
       padding: 18px 28px;
@@ -350,7 +529,6 @@
       gap: 16px;
     }
 
-    /* Found in — left */
     .footer-found {
       display: flex;
       align-items: center;
@@ -360,11 +538,7 @@
       flex-wrap: wrap;
     }
 
-    .footer-found-label {
-      font-size: 13.5px;
-      font-weight: 600;
-      white-space: nowrap;
-    }
+    .footer-found-label { font-size: 13.5px; font-weight: 600; white-space: nowrap; }
 
     .tag {
       font-size: 12.5px;
@@ -376,13 +550,7 @@
       white-space: nowrap;
     }
 
-    /* Buttons — center */
-    .footer-actions {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-shrink: 0;
-    }
+    .footer-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 
     .footer-btn {
       font-size: 13.5px;
@@ -399,7 +567,6 @@
 
     .footer-btn:hover { background: var(--pill-bg); }
 
-    /* More info — right */
     .footer-more {
       font-size: 13.5px;
       font-weight: 500;
@@ -410,6 +577,141 @@
     }
 
     .footer-more:hover { text-decoration: underline; }
+
+    /* ── MOBILE ──────────────────────────────────── */
+    .mobile-os-row { display: none; }
+    .mobile-filter-row { display: none; }
+
+    @media (max-width: 680px) {
+      nav {
+        padding: 0 16px;
+        height: 52px;
+      }
+
+      /* hide centered nav search on mobile, show full-width version */
+      .nav-search { display: none; }
+      .os-switcher { display: none; }
+
+      /* show mobile logo only (no text) */
+      .nav-logo span { display: none; }
+
+      /* full-width search pill replacing centered one */
+      .mobile-search-wrap {
+        flex: 1;
+        margin: 0 12px;
+      }
+
+      .mobile-search-pill {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        background: var(--pill-bg);
+        border-radius: 99px;
+        padding: 8px 14px;
+        width: 100%;
+        cursor: text;
+      }
+
+      .mobile-search-pill svg { flex-shrink: 0; color: var(--gray); }
+
+      .mobile-search-pill input {
+        border: none;
+        outline: none;
+        font-size: 13px;
+        font-family: var(--font);
+        width: 100%;
+        background: transparent;
+        color: var(--black);
+      }
+
+      .mobile-search-pill input::placeholder { color: var(--light-gray); }
+
+      /* OS row below nav */
+      .mobile-os-row {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        padding: 10px 16px;
+        border-bottom: var(--border);
+      }
+
+      .page {
+        padding: 16px 16px 60px;
+      }
+
+      /* hide desktop filters, show mobile filter row */
+      .filters { display: none; }
+
+      .mobile-filter-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+      }
+
+      .mobile-count {
+        font-size: 13px;
+        color: var(--light-gray);
+      }
+
+      .mobile-filter-btn {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--black);
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-family: var(--font);
+        padding: 0;
+      }
+
+      /* single column grid on mobile */
+      .grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .card {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+
+      .card-thumb {
+        width: 72px;
+        height: 72px;
+        flex-shrink: 0;
+        margin-bottom: 0;
+      }
+
+      .card-meta { flex: 1; }
+
+      /* modal full screen on mobile */
+      .modal-overlay { padding: 0; align-items: flex-end; }
+
+      .modal {
+        width: 100%;
+        border-radius: 18px 18px 0 0;
+        max-height: 90vh;
+      }
+
+      .modal-icon-wrap { width: 200px; height: 200px; }
+
+      .modal-footer { flex-wrap: wrap; gap: 12px; }
+
+      /* search modal full width on mobile */
+      .search-modal {
+        width: 100%;
+        max-width: 100%;
+        margin-top: 0;
+        border-radius: 0 0 18px 18px;
+      }
+
+      .search-results-grid { grid-template-columns: repeat(2, 1fr); }
+    }
   </style>
 </head>
 <body>
@@ -418,22 +720,49 @@
 <nav>
   <div class="nav-logo">
     <div class="logo-icon"></div>
-    App Icon Library
+    <span>App Icon Library</span>
   </div>
-  <div class="search-pill">
-    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8">
-      <circle cx="6.5" cy="6.5" r="5.2"/><path d="M11 11l3.2 3.2" stroke-linecap="round"/>
-    </svg>
-    <input type="text" id="searchInput" placeholder="Search App Icons" autocomplete="off" spellcheck="false">
+
+  <!-- Mobile search (hidden on desktop) -->
+  <div class="mobile-search-wrap" style="display:none" id="mobileSearchWrap">
+    <div class="mobile-search-pill" id="mobileSearchPill">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8">
+        <circle cx="6.5" cy="6.5" r="5.2"/><path d="M11 11l3.2 3.2" stroke-linecap="round"/>
+      </svg>
+      <input type="text" id="mobileSearchInput" placeholder="Search App Icons" autocomplete="off" spellcheck="false">
+    </div>
+  </div>
+
+  <!-- Desktop: centered search -->
+  <div class="nav-search">
+    <div class="search-pill" id="navSearchPill">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8">
+        <circle cx="6.5" cy="6.5" r="5.2"/><path d="M11 11l3.2 3.2" stroke-linecap="round"/>
+      </svg>
+      <input type="text" id="searchInput" placeholder="Search App Icons" autocomplete="off" spellcheck="false" readonly>
+    </div>
+  </div>
+
+  <!-- OS switcher (desktop) -->
+  <div class="os-switcher">
+    <button class="os-btn active" data-os="ios">iOS</button>
+    <button class="os-btn" data-os="watchos">Watch OS</button>
+    <button class="os-btn" data-os="visionos">Vision OS</button>
   </div>
 </nav>
+
+<!-- Mobile OS row -->
+<div class="mobile-os-row" id="mobileOsRow">
+  <button class="os-btn active" data-os="ios">iOS</button>
+  <button class="os-btn" data-os="watchos">Watch OS</button>
+  <button class="os-btn" data-os="visionos">Vision OS</button>
+</div>
 
 <!-- ── PAGE ─────────────────────────────────────── -->
 <div class="page">
 
-  <!-- Filters -->
+  <!-- Desktop filters -->
   <div class="filters">
-    <!-- Categories -->
     <div>
       <div class="filter-col-label">Categories</div>
       <ul class="filter-list" id="categoryList">
@@ -445,8 +774,6 @@
         <li><a data-value="Business" href="#">Business</a></li>
       </ul>
     </div>
-
-    <!-- Style -->
     <div>
       <div class="filter-col-label">Style</div>
       <ul class="filter-list" id="styleList">
@@ -460,6 +787,17 @@
     </div>
   </div>
 
+  <!-- Mobile filter row -->
+  <div class="mobile-filter-row">
+    <span class="mobile-count" id="mobileCount">16 app icons</span>
+    <button class="mobile-filter-btn" id="mobileFilterBtn">
+      Categories
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+        <path d="M2 4l4 4 4-4"/>
+      </svg>
+    </button>
+  </div>
+
   <!-- Tabs -->
   <div class="tabs">
     <div class="tab active" data-tab="latest">Latest</div>
@@ -471,10 +809,53 @@
 
 </div>
 
+<!-- ── SEARCH OVERLAY ────────────────────────────── -->
+<div class="search-overlay" id="searchOverlay">
+  <div class="search-modal">
+    <div class="search-modal-header">
+      <div class="search-modal-input-wrap">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8">
+          <circle cx="6.5" cy="6.5" r="5.2"/><path d="M11 11l3.2 3.2" stroke-linecap="round"/>
+        </svg>
+        <input type="text" id="overlaySearchInput" placeholder="iOS Apps or Keywords..." autocomplete="off" spellcheck="false">
+      </div>
+      <div class="search-modal-os">
+        <button class="os-btn active">iOS</button>
+        <button class="os-btn">Watch OS</button>
+        <button class="os-btn">Vision OS</button>
+      </div>
+      <button class="search-close-btn" id="searchOverlayClose">
+        <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+          <path d="M1 1l10 10M11 1L1 11"/>
+        </svg>
+      </button>
+    </div>
+    <div class="search-modal-body" id="searchModalBody">
+      <!-- Empty state: browse -->
+      <div class="search-browse" id="searchBrowse">
+        <div class="search-browse-nav">
+          <div class="search-browse-nav-item active" data-browse="categories" onclick="setBrowseTab(this,'categories')">Categories</div>
+          <div class="search-browse-nav-item" data-browse="style" onclick="setBrowseTab(this,'style')">Style</div>
+        </div>
+        <div class="search-browse-items" id="searchBrowseItems">
+          <div class="search-browse-item" onclick="applyBrowseFilter('category','Travel')">Travel &amp; transportation</div>
+          <div class="search-browse-item" onclick="applyBrowseFilter('category','Food & Drink')">Food &amp; Drink</div>
+          <div class="search-browse-item" onclick="applyBrowseFilter('category','Finance')">Finance</div>
+          <div class="search-browse-item" onclick="applyBrowseFilter('category','Education')">Education</div>
+          <div class="search-browse-item" onclick="applyBrowseFilter('category','Business')">Business</div>
+        </div>
+      </div>
+      <!-- Results -->
+      <div id="searchResults" style="display:none">
+        <div class="search-results-grid" id="searchResultsGrid"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ── MODAL ─────────────────────────────────────── -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal" id="modal">
-
     <div class="modal-header">
       <div class="modal-header-left">
         <div class="modal-logo-icon"></div>
@@ -494,37 +875,29 @@
         </button>
       </div>
     </div>
-
     <div class="modal-icon-area">
       <div class="modal-icon-wrap">
         <img id="modalImg" src="" alt="">
       </div>
     </div>
-
     <div class="modal-footer">
-      <!-- Found in -->
       <div class="footer-found">
         <span class="footer-found-label">Found in</span>
         <div id="modalTags" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
       </div>
-
-      <!-- Actions -->
       <div class="footer-actions">
         <button class="footer-btn" id="copyBtn">Copy</button>
         <button class="footer-btn" id="downloadBtn">Download PNG</button>
       </div>
-
-      <!-- More info -->
       <div class="footer-more" id="moreInfo">More info</div>
     </div>
-
   </div>
 </div>
 
 <script>
-// ─────────────────────────────────────────────────────────
-//  APP DATA  — edit this array to add / remove apps
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────
+//  APP DATA
+// ─────────────────────────────────────────────
 const APPS = [
   { name: 'Airbnb',      category: 'Travel',       tags: ['Flat', 'Typographic'],      isNew: false, popularity: 9  },
   { name: 'Uber',        category: 'Travel',       tags: ['Flat', 'Typographic'],      isNew: false, popularity: 10 },
@@ -544,9 +917,9 @@ const APPS = [
   { name: 'Hopper',      category: 'Travel',       tags: ['Illustrated', 'Gradients'], isNew: true,  popularity: 6  },
 ];
 
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────
 //  STATE
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────
 const cache        = {};
 let activeCategory = 'all';
 let activeStyle    = 'all';
@@ -554,9 +927,27 @@ let activeTab      = 'latest';
 let searchQuery    = '';
 let selectedApp    = null;
 
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────
+//  MOBILE DETECTION
+// ─────────────────────────────────────────────
+function isMobile() { return window.innerWidth <= 680; }
+
+function applyMobileLayout() {
+  const mobileWrap = document.getElementById('mobileSearchWrap');
+  if (isMobile()) {
+    mobileWrap.style.display = 'block';
+  } else {
+    mobileWrap.style.display = 'none';
+  }
+  updateMobileCount();
+}
+
+window.addEventListener('resize', applyMobileLayout);
+applyMobileLayout();
+
+// ─────────────────────────────────────────────
 //  FETCH ICON
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────
 async function fetchIcon(name) {
   if (name in cache) return cache[name];
   try {
@@ -571,34 +962,33 @@ async function fetchIcon(name) {
   }
 }
 
-// Pre-fetch all icons eagerly
 APPS.forEach(a => fetchIcon(a.name));
 
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────
 //  FILTER
-// ─────────────────────────────────────────────────────────
-function getVisible() {
+// ─────────────────────────────────────────────
+function getVisible(query) {
   let list = APPS.slice();
   if (activeCategory !== 'all') list = list.filter(a => a.category === activeCategory);
   if (activeStyle    !== 'all') list = list.filter(a => a.tags.includes(activeStyle));
-  if (searchQuery)              list = list.filter(a => a.name.toLowerCase().includes(searchQuery));
-
+  const q = (query || searchQuery || '').toLowerCase();
+  if (q) list = list.filter(a => a.name.toLowerCase().includes(q));
   if (activeTab === 'popular') {
     list.sort((a, b) => b.popularity - a.popularity);
   } else {
-    // Latest: new items first, then rest in original order
     list.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0));
   }
   return list;
 }
 
-// ─────────────────────────────────────────────────────────
-//  RENDER
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────
+//  RENDER GRID
+// ─────────────────────────────────────────────
 function renderGrid() {
   const grid = document.getElementById('grid');
   const apps = getVisible();
   grid.innerHTML = '';
+  updateMobileCount(apps.length);
 
   if (!apps.length) {
     grid.innerHTML = '<div class="grid-empty">No apps match your filters.</div>';
@@ -609,14 +999,12 @@ function renderGrid() {
     const safeId = `thumb-${app.name.replace(/[^a-z0-9]/gi, '_')}`;
     const card   = document.createElement('div');
     card.className = 'card';
-
     card.innerHTML = `
       <div class="card-thumb loading" id="${safeId}"></div>
       <div class="card-meta">
         <span class="card-name">${app.name}</span>
         ${app.isNew ? '<span class="badge-new">New</span>' : ''}
       </div>`;
-
     card.addEventListener('click', () => openModal(app));
     grid.appendChild(card);
 
@@ -635,12 +1023,110 @@ function applyThumb(el, url) {
   el.innerHTML = url ? `<img src="${url}" alt="" loading="lazy">` : '';
 }
 
-// ─────────────────────────────────────────────────────────
+function updateMobileCount(count) {
+  const c = count !== undefined ? count : getVisible().length;
+  const el = document.getElementById('mobileCount');
+  if (el) el.textContent = `${c} app icon${c !== 1 ? 's' : ''}`;
+}
+
+// ─────────────────────────────────────────────
+//  SEARCH OVERLAY
+// ─────────────────────────────────────────────
+function openSearchOverlay() {
+  document.getElementById('searchOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => document.getElementById('overlaySearchInput').focus(), 50);
+}
+
+function closeSearchOverlay() {
+  document.getElementById('searchOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+  document.getElementById('overlaySearchInput').value = '';
+  showSearchBrowse();
+}
+
+function showSearchBrowse() {
+  document.getElementById('searchBrowse').style.display = 'grid';
+  document.getElementById('searchResults').style.display = 'none';
+}
+
+function showSearchResults(q) {
+  document.getElementById('searchBrowse').style.display = 'none';
+  document.getElementById('searchResults').style.display = 'block';
+  const apps = getVisible(q);
+  const grid = document.getElementById('searchResultsGrid');
+  grid.innerHTML = '';
+
+  if (!apps.length) {
+    grid.innerHTML = '<div class="search-empty-msg" style="grid-column:1/-1">No results for "' + q + '"</div>';
+    return;
+  }
+
+  apps.forEach(app => {
+    const safeId = `sthumb-${app.name.replace(/[^a-z0-9]/gi, '_')}`;
+    const card   = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="card-thumb loading" id="${safeId}"></div>
+      <div class="card-meta">
+        <span class="card-name">${app.name}</span>
+        ${app.isNew ? '<span class="badge-new">New</span>' : ''}
+      </div>`;
+    card.addEventListener('click', () => { closeSearchOverlay(); openModal(app); });
+    grid.appendChild(card);
+
+    const thumbEl = () => document.getElementById(safeId);
+    if (app.name in cache) {
+      applyThumb(thumbEl(), cache[app.name]);
+    } else {
+      fetchIcon(app.name).then(url => applyThumb(thumbEl(), url));
+    }
+  });
+}
+
+// Browse tab switching
+function setBrowseTab(el, tab) {
+  document.querySelectorAll('.search-browse-nav-item').forEach(i => i.classList.remove('active'));
+  el.classList.add('active');
+  const items = document.getElementById('searchBrowseItems');
+  if (tab === 'categories') {
+    items.innerHTML = `
+      <div class="search-browse-item" onclick="applyBrowseFilter('category','Travel')">Travel &amp; transportation</div>
+      <div class="search-browse-item" onclick="applyBrowseFilter('category','Food & Drink')">Food &amp; Drink</div>
+      <div class="search-browse-item" onclick="applyBrowseFilter('category','Finance')">Finance</div>
+      <div class="search-browse-item" onclick="applyBrowseFilter('category','Education')">Education</div>
+      <div class="search-browse-item" onclick="applyBrowseFilter('category','Business')">Business</div>`;
+  } else {
+    items.innerHTML = `
+      <div class="search-browse-item" onclick="applyBrowseFilter('style','Flat')">Flat</div>
+      <div class="search-browse-item" onclick="applyBrowseFilter('style','Illustrated')">Illustrated</div>
+      <div class="search-browse-item" onclick="applyBrowseFilter('style','3D')">3D</div>
+      <div class="search-browse-item" onclick="applyBrowseFilter('style','Typographic')">Typographic</div>
+      <div class="search-browse-item" onclick="applyBrowseFilter('style','Gradients')">Gradients</div>`;
+  }
+}
+
+function applyBrowseFilter(type, value) {
+  closeSearchOverlay();
+  if (type === 'category') {
+    activeCategory = value;
+    document.querySelectorAll('#categoryList a').forEach(a => {
+      a.classList.toggle('active', a.dataset.value === value);
+    });
+  } else {
+    activeStyle = value;
+    document.querySelectorAll('#styleList a').forEach(a => {
+      a.classList.toggle('active', a.dataset.value === value);
+    });
+  }
+  renderGrid();
+}
+
+// ─────────────────────────────────────────────
 //  MODAL
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────
 function openModal(app) {
   selectedApp = app;
-
   document.getElementById('modalTitle').textContent = app.name;
   document.getElementById('modalTags').innerHTML    = app.tags.map(t => `<span class="tag">${t}</span>`).join('');
   document.getElementById('copyBtn').textContent    = 'Copy';
@@ -661,9 +1147,9 @@ function closeModal() {
   selectedApp = null;
 }
 
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────
 //  COPY / DOWNLOAD
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────
 async function copyAction() {
   if (!selectedApp) return;
   const url = cache[selectedApp.name];
@@ -700,9 +1186,11 @@ async function downloadAction() {
   }
 }
 
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────
 //  EVENT WIRING
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────
+
+// Desktop filter lists
 function bindFilterList(id, setter) {
   document.getElementById(id).addEventListener('click', e => {
     e.preventDefault();
@@ -718,6 +1206,7 @@ function bindFilterList(id, setter) {
 bindFilterList('categoryList', v => { activeCategory = v; });
 bindFilterList('styleList',    v => { activeStyle    = v; });
 
+// Tabs
 document.querySelectorAll('.tab').forEach(tab => {
   tab.addEventListener('click', () => {
     activeTab = tab.dataset.tab;
@@ -727,34 +1216,78 @@ document.querySelectorAll('.tab').forEach(tab => {
   });
 });
 
-let searchTimer;
-document.getElementById('searchInput').addEventListener('input', e => {
-  clearTimeout(searchTimer);
-  searchTimer = setTimeout(() => {
+// Desktop search pill opens overlay
+document.getElementById('navSearchPill').addEventListener('click', openSearchOverlay);
+document.getElementById('searchInput').addEventListener('focus', openSearchOverlay);
+
+// Mobile search input — filters main grid directly
+let mobileSearchTimer;
+document.getElementById('mobileSearchInput').addEventListener('input', e => {
+  clearTimeout(mobileSearchTimer);
+  mobileSearchTimer = setTimeout(() => {
     searchQuery = e.target.value.trim().toLowerCase();
     renderGrid();
   }, 160);
 });
 
+// Overlay search input
+let overlayTimer;
+document.getElementById('overlaySearchInput').addEventListener('input', e => {
+  clearTimeout(overlayTimer);
+  const q = e.target.value.trim();
+  overlayTimer = setTimeout(() => {
+    if (q.length === 0) {
+      showSearchBrowse();
+    } else {
+      showSearchResults(q);
+    }
+  }, 160);
+});
+
+// Close overlay
+document.getElementById('searchOverlayClose').addEventListener('click', closeSearchOverlay);
+document.getElementById('searchOverlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('searchOverlay')) closeSearchOverlay();
+});
+
+// Modal
 document.getElementById('modalClose').addEventListener('click', closeModal);
 document.getElementById('modalOverlay').addEventListener('click', e => {
   if (e.target === document.getElementById('modalOverlay')) closeModal();
 });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closeModal();
+    closeSearchOverlay();
+  }
+});
 
 document.getElementById('copyBtn').addEventListener('click', copyAction);
 document.getElementById('downloadBtn').addEventListener('click', downloadAction);
-
 document.getElementById('copyLinkBtn').addEventListener('click', () => {
   if (selectedApp) navigator.clipboard.writeText(window.location.href + '#' + selectedApp.name.toLowerCase());
 });
 
-// ─────────────────────────────────────────────────────────
-//  INIT
-// ─────────────────────────────────────────────────────────
-renderGrid();
+// OS switcher (desktop)
+document.querySelectorAll('.os-switcher .os-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.os-switcher .os-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
 
-// Final re-render once all icons are loaded
+// OS switcher (mobile row)
+document.querySelectorAll('#mobileOsRow .os-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('#mobileOsRow .os-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+
+// ─────────────────────────────────────────────
+//  INIT
+// ─────────────────────────────────────────────
+renderGrid();
 Promise.allSettled(APPS.map(a => fetchIcon(a.name))).then(() => renderGrid());
 </script>
 </body>
