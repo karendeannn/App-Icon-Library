@@ -1185,7 +1185,8 @@ async function downloadAction() {
   try {
     const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(url)}`;
     const blob = await fetch(proxyUrl).then(r => r.blob());
-    a.href     = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
     a.download = `${selectedApp.name.toLowerCase().replace(/\s+/g, '-')}-icon.png`;
     a.click();
     setTimeout(() => URL.revokeObjectURL(a.href), 5000);
