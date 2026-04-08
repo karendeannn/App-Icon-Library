@@ -719,6 +719,10 @@
 
       .search-results-grid { grid-template-columns: repeat(2, 1fr); }
     }
+    /* OS-specific styles */
+    .os-ios .card-thumb     { border-radius: 26%; }
+    .os-watchos .card-thumb { border-radius: 50%; }
+    .os-visionos .card-thumb{ border-radius: 38%; }
   </style>
 </head>
 <body>
@@ -956,6 +960,7 @@ let activeStyle    = 'all';
 let activeTab      = 'latest';
 let searchQuery    = '';
 let selectedApp    = null;
+let activeOS       = 'ios';
 
 // ─────────────────────────────────────────────
 //  MOBILE DETECTION
@@ -998,7 +1003,8 @@ APPS.forEach(a => fetchIcon(a.name));
 //  FILTER
 // ─────────────────────────────────────────────
 function getVisible(query) {
-  let list = APPS.slice();
+  const source = activeOS === 'watchos' ? WATCH_APPS : activeOS === 'visionos' ? VISION_APPS : APPS;
+  let list = source.slice();
   if (activeCategory !== 'all') list = list.filter(a => a.category === activeCategory);
   if (activeStyle    !== 'all') list = list.filter(a => a.tags.includes(activeStyle));
   const q = (query || searchQuery || '').toLowerCase();
@@ -1018,6 +1024,7 @@ function renderGrid() {
   const grid = document.getElementById('grid');
   const apps = getVisible();
   grid.innerHTML = '';
+  grid.className = `grid os-${activeOS}`;
   updateMobileCount(apps.length);
 
   if (!apps.length) {
@@ -1301,19 +1308,17 @@ document.getElementById('copyLinkBtn').addEventListener('click', () => {
   if (selectedApp) navigator.clipboard.writeText(window.location.href + '#' + selectedApp.name.toLowerCase());
 });
 
-// OS switcher (desktop)
-document.querySelectorAll('.os-switcher .os-btn').forEach(btn => {
+document.querySelectorAll('.os-btn[data-os]').forEach(btn => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.os-switcher .os-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-  });
-});
-
-// OS switcher (mobile row)
-document.querySelectorAll('#mobileOsRow .os-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('#mobileOsRow .os-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+    activeOS = btn.dataset.os;
+    document.querySelectorAll('.os-btn[data-os]').forEach(b => {
+      b.classList.toggle('active', b.dataset.os === activeOS);
+    });
+    activeCategory = 'all';
+    activeStyle = 'all';
+    document.querySelectorAll('#categoryList a').forEach(a => a.classList.toggle('active', a.dataset.value === 'all'));
+    document.querySelectorAll('#styleList a').forEach(a => a.classList.toggle('active', a.dataset.value === 'all'));
+    renderGrid();
   });
 });
 
