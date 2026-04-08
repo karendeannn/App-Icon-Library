@@ -34,10 +34,13 @@
       justify-content: space-between;
       padding: 0 40px;
       height: 56px;
-      margin: 0 auto;
-      max-width: 1280px;
       border-bottom: var(--border);
-      position: relative;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
     }
 
     .nav-logo {
@@ -718,6 +721,7 @@
 
 <!-- ── NAV ─────────────────────────────────────── -->
 <nav>
+  <div style="display:flex; align-items:center; justify-content:space-between; width:100%; max-width:1280px; margin:0 auto;">
   <div class="nav-logo">
     <div class="logo-icon"></div>
     <span>App Icon Library</span>
