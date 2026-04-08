@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>App Icon Library</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230f0f0f'/></svg>">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -38,9 +39,9 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      background: rgba(255, 255, 255, 0.7);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
     }
 
     .nav-logo {
@@ -73,7 +74,8 @@
       display: flex;
       align-items: center;
       gap: 7px;
-      background: var(--pill-bg);
+      background: #fff;
+      border: 1px solid #d0d0d0;
       border-radius: 99px;
       padding: 8px 16px;
       width: 240px;
@@ -721,11 +723,11 @@
 
 <!-- ── NAV ─────────────────────────────────────── -->
 <nav>
-  <div style="display:flex; align-items:center; justify-content:space-between; width:100%; max-width:1280px; margin:0 auto;">
-  <div class="nav-logo">
+  <div style="display:flex; align-items:center; justify-content:space-between; width:100%; max-width:1200px; margin:0 auto;">
+  <a href="/" class="nav-logo" style="text-decoration:none;">
     <div class="logo-icon"></div>
     <span>App Icon Library</span>
-  </div>
+  </a>
 
   <!-- Mobile search (hidden on desktop) -->
   <div class="mobile-search-wrap" style="display:none" id="mobileSearchWrap">
@@ -1159,14 +1161,16 @@ async function copyAction() {
   const url = cache[selectedApp.name];
   if (!url) return;
   const btn = document.getElementById('copyBtn');
+  btn.textContent = 'Copying...';
   try {
-    const blob = await fetch(url).then(r => r.blob());
+    const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(url)}`;
+    const blob = await fetch(proxyUrl).then(r => r.blob());
     await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
     btn.textContent = 'Copied!';
   } catch {
     try {
       await navigator.clipboard.writeText(url);
-      btn.textContent = 'URL Copied';
+      btn.textContent = 'URL copied';
     } catch {
       btn.textContent = 'Failed';
     }
@@ -1179,8 +1183,8 @@ async function downloadAction() {
   const url = cache[selectedApp.name];
   if (!url) return;
   try {
-    const blob = await fetch(url).then(r => r.blob());
-    const a    = document.createElement('a');
+    const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(url)}`;
+    const blob = await fetch(proxyUrl).then(r => r.blob());
     a.href     = URL.createObjectURL(blob);
     a.download = `${selectedApp.name.toLowerCase().replace(/\s+/g, '-')}-icon.png`;
     a.click();
