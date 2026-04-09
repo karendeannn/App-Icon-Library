@@ -723,6 +723,8 @@
     .os-ios .card-thumb     { border-radius: 26%; }
     .os-watchos .card-thumb { border-radius: 50%; }
     .os-visionos .card-thumb{ border-radius: 38%; }
+
+    .os-watchos .card-thumb { border-radius: 26%; }
   </style>
 </head>
 <body>
@@ -759,7 +761,7 @@
   <div class="os-switcher">
     <button class="os-btn active" data-os="ios">iOS</button>
     <button class="os-btn" data-os="watchos">Watch OS</button>
-    <button class="os-btn" data-os="visionos">Vision OS</button>
+    <button class="os-btn" data-os="visionos" style="display:none">Vision OS</button>
   </div>
 </nav>
 
@@ -767,7 +769,7 @@
 <div class="mobile-os-row" id="mobileOsRow">
   <button class="os-btn active" data-os="ios">iOS</button>
   <button class="os-btn" data-os="watchos">Watch OS</button>
-  <button class="os-btn" data-os="visionos">Vision OS</button>
+  <button class="os-btn" data-os="visionos" style="display:none">Vision OS</button>
 </div>
 
 <!-- ── PAGE ─────────────────────────────────────── -->
@@ -927,17 +929,53 @@ const APPS = [
   { name: 'Waze',        category: 'Travel',       tags: ['Illustrated', 'Flat'],      isNew: false, popularity: 8  },
   { name: 'Citymapper',  category: 'Travel',       tags: ['Flat'],                     isNew: true,  popularity: 6  },
   { name: 'Hopper',      category: 'Travel',       tags: ['Illustrated', 'Gradients'], isNew: true,  popularity: 6  },
+  { name: 'Spotify',     category: 'Business',     tags: ['Flat', 'Typographic'],      isNew: false, popularity: 10 },
+  { name: 'Instagram',   category: 'Business',     tags: ['Gradients', 'Flat'],        isNew: false, popularity: 10 },
+  { name: 'Figma',       category: 'Business',     tags: ['Flat', 'Illustrated'],      isNew: false, popularity: 9  },
+  { name: 'Todoist',     category: 'Business',     tags: ['Flat', 'Typographic'],      isNew: true,  popularity: 8  },
+  { name: 'Things 3',    category: 'Business',     tags: ['Flat', 'Typographic'],      isNew: false, popularity: 8  },
+  { name: 'Bear',        category: 'Business',     tags: ['Illustrated', 'Flat'],      isNew: false, popularity: 7  },
+  { name: 'Craft',       category: 'Business',     tags: ['Flat', 'Typographic'],      isNew: true,  popularity: 7  },
+  { name: 'Darkroom',    category: 'Business',     tags: ['Flat', 'Gradients'],        isNew: false, popularity: 7  },
+  { name: 'Halide',      category: 'Business',     tags: ['Flat', 'Typographic'],      isNew: false, popularity: 7  },
+  { name: 'Fantastical', category: 'Business',     tags: ['Flat', 'Typographic'],      isNew: false, popularity: 8  },
+  { name: 'Superhuman',  category: 'Business',     tags: ['Flat', 'Typographic'],      isNew: true,  popularity: 8  },
+  { name: 'Mubi',        category: 'Business',     tags: ['Flat', 'Typographic'],      isNew: false, popularity: 7  },
+  { name: 'Shazam',      category: 'Business',     tags: ['Flat', 'Gradients'],        isNew: false, popularity: 9  },
+  { name: 'Strava',      category: 'Travel',       tags: ['Flat', 'Typographic'],      isNew: false, popularity: 9  },
+  { name: 'AllTrails',   category: 'Travel',       tags: ['Flat', 'Illustrated'],      isNew: true,  popularity: 7  },
+  { name: 'Flighty',     category: 'Travel',       tags: ['Flat', 'Gradients'],        isNew: true,  popularity: 7  },
+  { name: 'Tripit',      category: 'Travel',       tags: ['Flat', 'Typographic'],      isNew: false, popularity: 6  },
+  { name: 'MyFitnessPal',category: 'Education',    tags: ['Flat', 'Typographic'],      isNew: false, popularity: 8  },
+  { name: 'Whoop',       category: 'Education',    tags: ['Flat', 'Typographic'],      isNew: true,  popularity: 8  },
+  { name: 'Oura',        category: 'Education',    tags: ['Flat', 'Typographic'],      isNew: true,  popularity: 7  },
+  { name: 'Noom',        category: 'Education',    tags: ['Illustrated', 'Flat'],      isNew: false, popularity: 6  },
+  { name: 'Coinbase',    category: 'Finance',      tags: ['Flat', 'Typographic'],      isNew: false, popularity: 8  },
+  { name: 'Wise',        category: 'Finance',      tags: ['Flat', 'Illustrated'],      isNew: true,  popularity: 7  },
+  { name: 'Klarna',      category: 'Finance',      tags: ['Flat', 'Typographic'],      isNew: false, popularity: 7  },
 ];
 
 const WATCH_APPS = [
-  { name: 'Fantastical',   category: 'Business',     tags: ['Flat', 'Typographic'],      isNew: false, popularity: 8 },
-  { name: 'Carrot Weather',category: 'Travel',       tags: ['Illustrated', 'Flat'],      isNew: true,  popularity: 8 },
-  { name: 'Streaks',       category: 'Education',    tags: ['Flat', 'Typographic'],      isNew: false, popularity: 7 },
-  { name: 'AutoSleep',     category: 'Education',    tags: ['Gradients', 'Flat'],        isNew: false, popularity: 7 },
-  { name: 'Alarmy',        category: 'Education',    tags: ['Illustrated', 'Flat'],      isNew: true,  popularity: 6 },
-  { name: 'Robinhood',     category: 'Finance',      tags: ['Flat', 'Illustrated'],      isNew: false, popularity: 8 },
-  { name: 'Shazam',        category: 'Business',     tags: ['Flat', 'Gradients'],        isNew: false, popularity: 9 },
-  { name: 'Strava',        category: 'Travel',       tags: ['Flat', 'Typographic'],      isNew: true,  popularity: 9 },
+  { name: 'Fantastical',    category: 'Business',   tags: ['Flat', 'Typographic'],      isNew: false, popularity: 8 },
+  { name: 'Carrot Weather', category: 'Travel',     tags: ['Illustrated', 'Flat'],      isNew: true,  popularity: 8 },
+  { name: 'Streaks',        category: 'Education',  tags: ['Flat', 'Typographic'],      isNew: false, popularity: 7 },
+  { name: 'AutoSleep',      category: 'Education',  tags: ['Gradients', 'Flat'],        isNew: false, popularity: 7 },
+  { name: 'Alarmy',         category: 'Education',  tags: ['Illustrated', 'Flat'],      isNew: true,  popularity: 6 },
+  { name: 'Robinhood',      category: 'Finance',    tags: ['Flat', 'Illustrated'],      isNew: false, popularity: 8 },
+  { name: 'Shazam',         category: 'Business',   tags: ['Flat', 'Gradients'],        isNew: false, popularity: 9 },
+  { name: 'Strava',         category: 'Travel',     tags: ['Flat', 'Typographic'],      isNew: true,  popularity: 9 },
+  { name: 'Todoist',        category: 'Business',   tags: ['Flat', 'Typographic'],      isNew: true,  popularity: 8 },
+  { name: 'Things 3',       category: 'Business',   tags: ['Flat', 'Typographic'],      isNew: false, popularity: 8 },
+  { name: 'Calm',           category: 'Education',  tags: ['Gradients', 'Illustrated'], isNew: false, popularity: 7 },
+  { name: 'Headspace',      category: 'Education',  tags: ['Illustrated', 'Flat'],      isNew: false, popularity: 7 },
+  { name: 'Flighty',        category: 'Travel',     tags: ['Flat', 'Gradients'],        isNew: true,  popularity: 7 },
+  { name: 'Oura',           category: 'Education',  tags: ['Flat', 'Typographic'],      isNew: true,  popularity: 7 },
+  { name: 'Whoop',          category: 'Education',  tags: ['Flat', 'Typographic'],      isNew: true,  popularity: 8 },
+  { name: 'AllTrails',      category: 'Travel',     tags: ['Flat', 'Illustrated'],      isNew: false, popularity: 7 },
+  { name: 'Coinbase',       category: 'Finance',    tags: ['Flat', 'Typographic'],      isNew: false, popularity: 8 },
+  { name: 'Spotify',        category: 'Business',   tags: ['Flat', 'Typographic'],      isNew: false, popularity: 10},
+  { name: 'MyFitnessPal',   category: 'Education',  tags: ['Flat', 'Typographic'],      isNew: false, popularity: 8 },
+  { name: 'Duolingo',       category: 'Education',  tags: ['Illustrated', '3D'],        isNew: false, popularity: 9 },
 ];
 
 const VISION_APPS = [
@@ -998,6 +1036,7 @@ async function fetchIcon(name) {
 }
 
 APPS.forEach(a => fetchIcon(a.name));
+WATCH_APPS.forEach(a => fetchIcon(a.name));
 
 // ─────────────────────────────────────────────
 //  FILTER
