@@ -858,6 +858,7 @@
     <button class="os-btn" data-os="watchos">Watch OS</button>
     <button class="os-btn" data-os="visionos" style="display:none">Vision OS</button>
   </div>
+  </div>
 </nav>
 
 <!-- Mobile OS row -->
@@ -866,6 +867,7 @@
   <button class="os-btn" data-os="watchos">Watch OS</button>
   <button class="os-btn" data-os="visionos" style="display:none">Vision OS</button>
 </div>
+
 
 <!-- ── PAGE ─────────────────────────────────────── -->
 <div class="page">
@@ -1126,7 +1128,9 @@ applyMobileLayout();
 async function fetchIcon(name) {
   if (name in cache) return cache[name];
   try {
-    const r    = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(name)}&entity=software&limit=1`);
+    const apiUrl = `https://itunes.apple.com/search?term=${encodeURIComponent(name)}&entity=software&limit=1`;
+    const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(apiUrl)}`;
+    const r    = await fetch(proxyUrl);
     const data = await r.json();
     const url  = data.results?.[0]?.artworkUrl512 ?? null;
     cache[name] = url;
