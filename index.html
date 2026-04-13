@@ -297,37 +297,132 @@
 
     /* ── FILTERS ─────────────────────────────────── */
     .filters {
-      display: grid;
-      grid-template-columns: 220px 220px;
-      gap: 0 40px;
-      margin-bottom: 40px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
     }
 
-    .filter-col-label {
-      font-size: 13px;
-      color: var(--light-gray);
-      font-weight: 400;
-      margin-bottom: 10px;
+    .filter-dropdown {
+      position: relative;
     }
 
-    .filter-list { list-style: none; }
-    .filter-list li + li { margin-top: 2px; }
-
-    .filter-list a {
-      text-decoration: none;
-      font-size: 15px;
-      font-weight: 400;
+    .filter-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      font-weight: 500;
       color: var(--black);
+      background: none;
+      border: 0.5px solid #d0d0d0;
+      border-radius: 99px;
+      padding: 7px 14px;
       cursor: pointer;
-      display: inline-block;
-      padding: 1.5px 0;
-      transition: opacity 0.12s;
-      opacity: 0.38;
+      font-family: var(--font);
+      transition: background 0.1s;
+      white-space: nowrap;
     }
 
-    .filter-list a:hover { opacity: 0.65; }
-    .filter-list a.active { opacity: 1; font-weight: 600; }
+    .filter-btn:hover { background: var(--pill-bg); }
+    .filter-btn.has-selection { border-color: var(--black); }
 
+    .filter-btn svg {
+      transition: transform 0.15s;
+      flex-shrink: 0;
+    }
+
+    .filter-btn.open svg { transform: rotate(180deg); }
+
+    .filter-menu {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      background: var(--bg);
+      border: 0.5px solid #e0e0e0;
+      border-radius: 14px;
+      padding: 8px;
+      min-width: 220px;
+      z-index: 50;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      display: none;
+    }
+
+    .filter-menu.open { display: block; }
+
+    .filter-menu-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--black);
+      transition: background 0.1s;
+      user-select: none;
+    }
+
+    .filter-menu-item:hover { background: var(--pill-bg); }
+
+    .filter-checkbox {
+      width: 16px;
+      height: 16px;
+      border: 1.5px solid #c8c8c8;
+      border-radius: 4px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.1s;
+    }
+
+    .filter-menu-item.selected .filter-checkbox {
+      background: var(--black);
+      border-color: var(--black);
+    }
+
+    .filter-menu-item.selected .filter-checkbox::after {
+      content: '';
+      display: block;
+      width: 9px;
+      height: 7px;
+      background: url("data:image/svg+xml,%3Csvg viewBox='0 0 9 7' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 3.5L3.5 6L8 1' stroke='white' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat;
+    }
+
+    /* Active filter pills */
+    .filter-pills {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .filter-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--black);
+      border: 0.5px solid #d0d0d0;
+      border-radius: 99px;
+      padding: 6px 12px;
+      background: var(--bg);
+      cursor: default;
+    }
+
+    .filter-pill-remove {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      opacity: 0.5;
+      transition: opacity 0.1s;
+    }
+
+    .filter-pill-remove:hover { opacity: 1; }
     /* ── TABS ────────────────────────────────────── */
     .tabs {
       display: flex;
@@ -777,30 +872,37 @@
 
   <!-- Desktop filters -->
   <div class="filters">
-    <div>
-      <div class="filter-col-label">Categories</div>
-      <ul class="filter-list" id="categoryList">
-        <li><a class="active" data-value="all" href="#">All</a></li>
-        <li><a data-value="Travel" href="#">Travel &amp; transportation</a></li>
-        <li><a data-value="Food & Drink" href="#">Food &amp; Drink</a></li>
-        <li><a data-value="Finance" href="#">Finance</a></li>
-        <li><a data-value="Education" href="#">Education</a></li>
-        <li><a data-value="Business" href="#">Business</a></li>
-      </ul>
+    <div class="filter-dropdown" id="catDropdown">
+      <button class="filter-btn" id="catBtn" onclick="toggleDropdown('cat')">
+        Categories
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 4l4 4 4-4"/></svg>
+      </button>
+      <div class="filter-menu" id="catMenu">
+        <div class="filter-menu-item" data-cat="AI" onclick="toggleCat('AI',this)"><div class="filter-checkbox"></div>AI</div>
+        <div class="filter-menu-item" data-cat="Travel" onclick="toggleCat('Travel',this)"><div class="filter-checkbox"></div>Travel &amp; transportation</div>
+        <div class="filter-menu-item" data-cat="Food & Drink" onclick="toggleCat('Food & Drink',this)"><div class="filter-checkbox"></div>Food &amp; Drink</div>
+        <div class="filter-menu-item" data-cat="Finance" onclick="toggleCat('Finance',this)"><div class="filter-checkbox"></div>Finance</div>
+        <div class="filter-menu-item" data-cat="Education" onclick="toggleCat('Education',this)"><div class="filter-checkbox"></div>Education</div>
+        <div class="filter-menu-item" data-cat="Business" onclick="toggleCat('Business',this)"><div class="filter-checkbox"></div>Business</div>
+      </div>
     </div>
-    <div>
-      <div class="filter-col-label">Style</div>
-      <ul class="filter-list" id="styleList">
-        <li><a class="active" data-value="all" href="#">All</a></li>
-        <li><a data-value="Flat" href="#">Flat</a></li>
-        <li><a data-value="Illustrated" href="#">Illustrated</a></li>
-        <li><a data-value="3D" href="#">3D</a></li>
-        <li><a data-value="Typographic" href="#">Typographic</a></li>
-        <li><a data-value="Gradients" href="#">Gradients</a></li>
-      </ul>
-    </div>
-  </div>
 
+    <div class="filter-dropdown" id="styleDropdown">
+      <button class="filter-btn" id="styleBtn" onclick="toggleDropdown('style')">
+        Style
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 4l4 4 4-4"/></svg>
+      </button>
+      <div class="filter-menu" id="styleMenu">
+        <div class="filter-menu-item" data-style="Flat" onclick="toggleStyle('Flat',this)"><div class="filter-checkbox"></div>Flat</div>
+        <div class="filter-menu-item" data-style="Illustrated" onclick="toggleStyle('Illustrated',this)"><div class="filter-checkbox"></div>Illustrated</div>
+        <div class="filter-menu-item" data-style="3D" onclick="toggleStyle('3D',this)"><div class="filter-checkbox"></div>3D</div>
+        <div class="filter-menu-item" data-style="Typographic" onclick="toggleStyle('Typographic',this)"><div class="filter-checkbox"></div>Typographic</div>
+        <div class="filter-menu-item" data-style="Gradients" onclick="toggleStyle('Gradients',this)"><div class="filter-checkbox"></div>Gradients</div>
+      </div>
+    </div>
+
+    <div class="filter-pills" id="filterPills"></div>
+  </div>
   <!-- Mobile filter row -->
   <div class="mobile-filter-row">
     <span class="mobile-count" id="mobileCount">16 app icons</span>
@@ -1044,8 +1146,8 @@ WATCH_APPS.forEach(a => fetchIcon(a.name));
 function getVisible(query) {
   const source = activeOS === 'watchos' ? WATCH_APPS : activeOS === 'visionos' ? VISION_APPS : APPS;
   let list = source.slice();
-  if (activeCategory !== 'all') list = list.filter(a => a.category === activeCategory);
-  if (activeStyle    !== 'all') list = list.filter(a => a.tags.includes(activeStyle));
+  if (selectedCats.size > 0)   list = list.filter(a => selectedCats.has(a.category));
+  if (selectedStyles.size > 0) list = list.filter(a => a.tags.some(t => selectedStyles.has(t)));
   const q = (query || searchQuery || '').toLowerCase();
   if (q) list = list.filter(a => a.name.toLowerCase().includes(q));
   if (activeTab === 'popular') {
@@ -1270,21 +1372,88 @@ async function downloadAction() {
 // ─────────────────────────────────────────────
 
 // Desktop filter lists
-function bindFilterList(id, setter) {
-  document.getElementById(id).addEventListener('click', e => {
-    e.preventDefault();
-    const a = e.target.closest('a[data-value]');
-    if (!a) return;
-    document.querySelectorAll(`#${id} a`).forEach(x => x.classList.remove('active'));
-    a.classList.add('active');
-    setter(a.dataset.value);
-    renderGrid();
-  });
+// ── NEW FILTER LOGIC ──────────────────────────
+let selectedCats  = new Set();
+let selectedStyles = new Set();
+
+function toggleDropdown(type) {
+  const menu = document.getElementById(type === 'cat' ? 'catMenu' : 'styleMenu');
+  const btn  = document.getElementById(type === 'cat' ? 'catBtn' : 'styleBtn');
+  const isOpen = menu.classList.contains('open');
+  closeAllDropdowns();
+  if (!isOpen) {
+    menu.classList.add('open');
+    btn.classList.add('open');
+  }
 }
 
-bindFilterList('categoryList', v => { activeCategory = v; });
-bindFilterList('styleList',    v => { activeStyle    = v; });
+function closeAllDropdowns() {
+  document.querySelectorAll('.filter-menu').forEach(m => m.classList.remove('open'));
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('open'));
+}
 
+document.addEventListener('click', e => {
+  if (!e.target.closest('.filter-dropdown')) closeAllDropdowns();
+});
+
+function toggleCat(val, el) {
+  el.classList.toggle('selected');
+  if (selectedCats.has(val)) selectedCats.delete(val);
+  else selectedCats.add(val);
+  updateCatBtn();
+  renderPills();
+  renderGrid();
+}
+
+function toggleStyle(val, el) {
+  el.classList.toggle('selected');
+  if (selectedStyles.has(val)) selectedStyles.delete(val);
+  else selectedStyles.add(val);
+  updateStyleBtn();
+  renderPills();
+  renderGrid();
+}
+
+function updateCatBtn() {
+  const btn = document.getElementById('catBtn');
+  btn.classList.toggle('has-selection', selectedCats.size > 0);
+}
+
+function updateStyleBtn() {
+  const btn = document.getElementById('styleBtn');
+  btn.classList.toggle('has-selection', selectedStyles.size > 0);
+}
+
+function removeCat(val) {
+  selectedCats.delete(val);
+  const item = document.querySelector(`[data-cat="${val}"]`);
+  if (item) item.classList.remove('selected');
+  updateCatBtn();
+  renderPills();
+  renderGrid();
+}
+
+function removeStyle(val) {
+  selectedStyles.delete(val);
+  const item = document.querySelector(`[data-style="${val}"]`);
+  if (item) item.classList.remove('selected');
+  updateStyleBtn();
+  renderPills();
+  renderGrid();
+}
+
+function renderPills() {
+  const container = document.getElementById('filterPills');
+  const catLabels = { 'AI':'AI', 'Travel':'Travel & transportation', 'Food & Drink':'Food & Drink', 'Finance':'Finance', 'Education':'Education', 'Business':'Business' };
+  let html = '';
+  selectedCats.forEach(v => {
+    html += `<div class="filter-pill">${catLabels[v] || v}<span class="filter-pill-remove" onclick="removeCat('${v}')"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 2l8 8M10 2l-8 8"/></svg></span></div>`;
+  });
+  selectedStyles.forEach(v => {
+    html += `<div class="filter-pill">${v}<span class="filter-pill-remove" onclick="removeStyle('${v}')"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 2l8 8M10 2l-8 8"/></svg></span></div>`;
+  });
+  container.innerHTML = html;
+}
 // Tabs
 document.querySelectorAll('.tab').forEach(tab => {
   tab.addEventListener('click', () => {
@@ -1353,8 +1522,12 @@ document.querySelectorAll('.os-btn[data-os]').forEach(btn => {
     document.querySelectorAll('.os-btn[data-os]').forEach(b => {
       b.classList.toggle('active', b.dataset.os === activeOS);
     });
-    activeCategory = 'all';
-    activeStyle = 'all';
+    selectedCats.clear();
+    selectedStyles.clear();
+    document.querySelectorAll('.filter-menu-item').forEach(i => i.classList.remove('selected'));
+    updateCatBtn();
+    updateStyleBtn();
+    renderPills();
     document.querySelectorAll('#categoryList a').forEach(a => a.classList.toggle('active', a.dataset.value === 'all'));
     document.querySelectorAll('#styleList a').forEach(a => a.classList.toggle('active', a.dataset.value === 'all'));
     renderGrid();
