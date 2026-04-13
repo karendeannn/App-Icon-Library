@@ -1339,8 +1339,7 @@ async function copyAction() {
   const btn = document.getElementById('copyBtn');
   btn.textContent = 'Copying...';
   try {
-    const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`
-    const blob = await fetch(proxyUrl).then(r => r.blob());
+    const blob = await fetch(url).then(r => r.blob());
     await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
     btn.textContent = 'Copied!';
   } catch {
@@ -1359,8 +1358,7 @@ async function downloadAction() {
   const url = cache[selectedApp.name];
   if (!url) return;
   try {
-    const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`
-    const blob = await fetch(proxyUrl).then(r => r.blob());
+    const blob = await fetch(url).then(r => r.blob());
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
     a.download = `${selectedApp.name.toLowerCase().replace(/\s+/g, '-')}-icon.png`;
