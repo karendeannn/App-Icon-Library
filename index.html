@@ -1130,9 +1130,7 @@ applyMobileLayout();
 async function fetchIcon(name) {
   if (name in cache) return cache[name];
   try {
-    const apiUrl = `https://itunes.apple.com/search?term=${encodeURIComponent(name)}&entity=software&limit=1`;
-    const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(apiUrl)}`;
-    const r    = await fetch(proxyUrl);
+    const r    = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(name)}&entity=software&limit=1`);
     const data = await r.json();
     const url  = data.results?.[0]?.artworkUrl512 ?? null;
     cache[name] = url;
