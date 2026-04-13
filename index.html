@@ -1103,6 +1103,8 @@ let activeTab      = 'latest';
 let searchQuery    = '';
 let selectedApp    = null;
 let activeOS       = 'ios';
+let selectedCats    = new Set();
+let selectedStyles  = new Set();
 
 // ─────────────────────────────────────────────
 //  MOBILE DETECTION
@@ -1377,8 +1379,6 @@ async function downloadAction() {
 
 // Desktop filter lists
 // ── NEW FILTER LOGIC ──────────────────────────
-let selectedCats  = new Set();
-let selectedStyles = new Set();
 
 function toggleDropdown(type) {
   const menu = document.getElementById(type === 'cat' ? 'catMenu' : 'styleMenu');
