@@ -631,12 +631,32 @@
       padding: 36px 48px 28px;
     }
 
+    .modal-sizes {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 40px;
+      width: 100%;
+    }
+
+    .modal-size-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .size-label {
+      font-size: 12px;
+      color: var(--light-gray);
+      font-weight: 400;
+    }
+
     .modal-icon-wrap {
-      width: 340px;
-      height: 340px;
       border-radius: 26%;
       overflow: hidden;
       background: var(--card-bg);
+      flex-shrink: 0;
     }
 
     .modal-icon-wrap img {
@@ -645,6 +665,10 @@
       object-fit: cover;
       display: block;
     }
+
+    .size-sm { width: 40px;  height: 40px; }
+    .size-md { width: 200px; height: 200px; }
+    .size-lg { width: 500px; height: 500px; }
 
     .modal-footer {
       border-top: var(--border);
@@ -706,6 +730,13 @@
     /* ── MOBILE ──────────────────────────────────── */
     .mobile-os-row { display: none; }
     .mobile-filter-row { display: none; }
+
+    @media (max-width: 680px) {
+      .size-lg { width: 200px; height: 200px; }
+      .size-md { width: 100px; height: 100px; }
+      .size-sm { display: none; }
+      .modal-sizes { gap: 20px; }
+    }
 
     @media (max-width: 680px) {
       nav {
@@ -1018,8 +1049,30 @@
       </div>
     </div>
     <div class="modal-icon-area">
-      <div class="modal-icon-wrap">
-        <img id="modalImg" src="" alt="">
+      <div class="modal-sizes">
+        <div class="modal-size-item">
+        <div class="modal-icon-area">
+        <div class="modal-sizes">
+          <div class="modal-size-item">
+            <div class="modal-icon-wrap size-sm">
+              <img class="modalImg-sm" src="" alt="">
+            </div>
+            <span class="size-label">40 x 40px</span>
+          </div>
+          <div class="modal-size-item">
+            <div class="modal-icon-wrap size-md">
+              <img class="modalImg-md" src="" alt="">
+            </div>
+            <span class="size-label">200 x 200px</span>
+          </div>
+          <div class="modal-size-item">
+            <div class="modal-icon-wrap size-lg">
+              <img class="modalImg-lg" src="" alt="">
+            </div>
+            <span class="size-label">500 x 500px</span>
+          </div>
+        </div>
+      </div>
       </div>
     </div>
     <div class="modal-footer">
@@ -1372,10 +1425,12 @@ function openModal(app) {
   document.getElementById('modalTags').innerHTML    = app.tags.map(t => `<span class="tag">${t}</span>`).join('');
   document.getElementById('copyBtn').textContent    = 'Copy';
 
-  const img = document.getElementById('modalImg');
-  img.src   = cache[app.name] || '';
+  const imgSrc = cache[app.name] || '';
+  document.querySelectorAll('.modalImg-sm, .modalImg-md, .modalImg-lg').forEach(img => img.src = imgSrc);
   if (!(app.name in cache)) {
-    fetchIcon(app.name).then(url => { if (url) img.src = url; });
+    fetchIcon(app.name).then(url => {
+      if (url) document.querySelectorAll('.modalImg-sm, .modalImg-md, .modalImg-lg').forEach(img => img.src = url);
+    });
   }
 
   document.getElementById('modalOverlay').classList.add('open');
