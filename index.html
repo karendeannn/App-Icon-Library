@@ -514,6 +514,29 @@
       padding: 2.5px 9px;
       border-radius: 99px;
     }
+    
+    .save-btn {
+      flex-shrink: 0;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--black);
+      background: var(--bg);
+      border: 0.5px solid #c8c8c8;
+      padding: 2.5px 9px;
+      border-radius: 99px;
+      cursor: pointer;
+      font-family: var(--font);
+      transition: all 0.1s;
+      white-space: nowrap;
+    }
+
+    .save-btn:hover { background: var(--pill-bg); }
+
+    .save-btn.saved {
+      background: var(--black);
+      color: var(--bg);
+      border-color: var(--black);
+    }
 
     /* ── EMPTY ───────────────────────────────────── */
     .grid-empty {
@@ -920,6 +943,7 @@
   <div class="tabs">
     <div class="tab active" data-tab="latest">Latest</div>
     <div class="tab" data-tab="popular">Most popular</div>
+    <div class="tab" data-tab="saved">Saved</div>
   </div>
 
   <!-- Grid -->
@@ -1107,6 +1131,25 @@ const VISION_APPS = [
 //  STATE
 // ─────────────────────────────────────────────
 const cache        = {};
+function getSaved() {
+  try { return new Set(JSON.parse(localStorage.getItem('savedIcons') || '[]')); }
+  catch { return new Set(); }
+}
+
+function toggleSave(name, btn) {
+  const saved = getSaved();
+  if (saved.has(name)) {
+    saved.delete(name);
+    btn.textContent = 'Save';
+    btn.classList.remove('saved');
+  } else {
+    saved.add(name);
+    btn.textContent = 'Saved';
+    btn.classList.add('saved');
+  }
+  localStorage.setItem('savedIcons', JSON.stringify([...saved]));
+  if (activeTab === 'saved') renderGrid();
+}
 let activeCategory = 'all';
 let activeStyle    = 'all';
 let activeTab      = 'latest';
@@ -1160,13 +1203,17 @@ WATCH_APPS.forEach(a => fetchIcon(a.name));
 function getVisible(query) {
   const source = activeOS === 'watchos' ? WATCH_APPS : activeOS === 'visionos' ? VISION_APPS : APPS;
   let list = source.slice();
+  if (activeTab === 'saved') {
+    const saved = getSaved();
+    list = list.filter(a => saved.has(a.name));
+  }
   if (selectedCats.size > 0)   list = list.filter(a => selectedCats.has(a.category));
   if (selectedStyles.size > 0) list = list.filter(a => a.tags.some(t => selectedStyles.has(t)));
   const q = (query || searchQuery || '').toLowerCase();
   if (q) list = list.filter(a => a.name.toLowerCase().includes(q));
   if (activeTab === 'popular') {
     list.sort((a, b) => b.popularity - a.popularity);
-  } else {
+  } else if (activeTab !== 'saved') {
     list.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0));
   }
   return list;
@@ -1183,7 +1230,7 @@ function renderGrid() {
   updateMobileCount(apps.length);
 
   if (!apps.length) {
-    grid.innerHTML = '<div class="grid-empty">No apps match your filters.</div>';
+    grid.innerHTML = `<div class="grid-empty">${activeTab === 'saved' ? 'No saved icons yet — hit Save on any icon to collect it.' : 'No apps match your filters.'}</div>`;
     return;
   }
 
@@ -1191,11 +1238,13 @@ function renderGrid() {
     const safeId = `thumb-${app.name.replace(/[^a-z0-9]/gi, '_')}`;
     const card   = document.createElement('div');
     card.className = 'card';
+    const saved = getSaved();
+    const isSaved = saved.has(app.name);
     card.innerHTML = `
       <div class="card-thumb loading" id="${safeId}"></div>
       <div class="card-meta">
         <span class="card-name">${app.name}</span>
-        ${app.isNew ? '<span class="badge-new">New</span>' : ''}
+        <button class="save-btn${isSaved ? ' saved' : ''}" onclick="event.stopPropagation();toggleSave('${app.name}',this)">${isSaved ? 'Saved' : 'Save'}</button>
       </div>`;
     card.addEventListener('click', () => openModal(app));
     grid.appendChild(card);
