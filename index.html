@@ -128,6 +128,18 @@
 
     .os-btn:hover:not(.active) { color: #555; }
 
+  /* cursor css */
+
+    .os-btn[data-os="watchos"] {
+        cursor: none;
+        position: relative;
+      }
+
+      .os-btn[data-os="visionos"] { 
+        cursor: none; 
+      }
+      
+
     /* ── Card description ──────────────────────────── */
 
     .card-desc {
@@ -516,6 +528,24 @@
       position: relative;
     }
 
+    .card-thumb::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0);
+      backdrop-filter: blur(0px);
+      -webkit-backdrop-filter: blur(0px);
+      transition: background 0.15s, backdrop-filter 0.15s;
+      border-radius: inherit;
+      pointer-events: none;
+    }
+
+    .card:hover .card-thumb::after {
+      background: rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
+    }
+
     .card-thumb.loading::after {
       content: '';
       position: absolute;
@@ -684,6 +714,7 @@
     }
 
     .modal-save-btn.saved {
+      display: none;
       background: var(--black);
       color: #fff;
     }
@@ -728,8 +759,8 @@
     }
 
     .modal-logo-icon {
-      width: 22px;
-      height: 22px;
+      width: 36px;
+      height: 36px;
       background: var(--black);
       border-radius: 5px;
       flex-shrink: 0;
@@ -809,6 +840,14 @@
       gap: 16px;
     }
 
+    .footer-btn.saved {
+      background: var(--black);
+      color: var(--bg);
+      border-color: var(--black);
+    }
+
+.footer-btn.saved:hover { background: #333; }
+
     .footer-found {
       display: flex;
       align-items: center;
@@ -848,6 +887,7 @@
     .footer-btn:hover { background: var(--pill-bg); }
 
     .footer-more {
+      display: none;
       font-size: 13.5px;
       font-weight: 500;
       color: var(--black);
@@ -863,6 +903,10 @@
     .mobile-filter-row { display: none; }
 
     @media (max-width: 680px) {
+      .card-meta-icon {
+        display: none;
+      }
+
       .modal-sizes {
         flex-direction: column;
         align-items: center;
@@ -1145,7 +1189,7 @@
       <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8">
         <circle cx="6.5" cy="6.5" r="5.2"/><path d="M11 11l3.2 3.2" stroke-linecap="round"/>
       </svg>
-      <input type="text" id="searchInput" placeholder="Search App Icons" autocomplete="off" spellcheck="false" readonly>
+      <input type="text" id="searchInput" placeholder="Search App Icons" autocomplete="off" spellcheck="false" style="font-weight: 500; color: black !important;">
     </div>
   </div>
 
@@ -1153,7 +1197,7 @@
   <div class="os-switcher">
     <button class="os-btn active" data-os="ios">iOS</button>
     <button class="os-btn" data-os="watchos">Watch OS</button>
-    <button class="os-btn" data-os="visionos" style="display:none">Vision OS</button>
+    <button class="os-btn" data-os="visionos">Vision OS</button>
   </div>
   </div>
 </nav>
@@ -1307,19 +1351,19 @@
           <div class="modal-icon-wrap size-sm">
             <img class="modalImg-sm" src="" alt="">
           </div>
-          <span class="size-label">1x</span>
+          <span class="size-label">60px x 60px</span>
         </div>
         <div class="modal-size-item">
           <div class="modal-icon-wrap size-md">
             <img class="modalImg-md" src="" alt="">
           </div>
-          <span class="size-label">30x</span>
+          <span class="size-label">200px x 200px</span>
         </div>
         <div class="modal-size-item">
           <div class="modal-icon-wrap size-lg">
             <img class="modalImg-lg" src="" alt="">
           </div>
-          <span class="size-label">60x</span>
+          <span class="size-label">460px x 460px</span>
         </div>
       </div>
     </div>
@@ -1330,6 +1374,7 @@
         <div id="modalTags" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
       </div>
       <div class="footer-actions">
+        <button class="footer-btn" id="modalSaveTextBtn" onclick="toggleModalSaveText()">Save</button>
         <button class="footer-btn" id="copyBtn">Copy</button>
         <button class="footer-btn" id="downloadBtn">Download PNG</button>
       </div>
@@ -1338,15 +1383,21 @@
   </div>
 </div>
 
+<div id="watchTooltip"
+  style="position:fixed;background:#0f0f0f;color:#fff;font-size:13px;font-weight:500;padding:8px 14px;border-radius:99px;pointer-events:none;opacity:0;transform:translateZ(99);transition:opacity 0.1s;z-index:100000;white-space:nowrap;font-family:-apple-system,sans-serif;will-change:transform;isolation:isolate;">
+  Coming Soon :)</div>
+
+  <div id="visionTooltip" style="position:fixed;background:#0f0f0f;color:#fff;font-size:13px;font-weight:500;padding:8px 14px;border-radius:99px;pointer-events:none;opacity:0;transform:translateZ(0) ;transition:opacity 0.1s;z-index:100000;white-space:nowrap;font-family:-apple-system,sans-serif;">Coming Soon :)</div>
+
 <script>
 // ─────────────────────────────────────────────
 //  APP DATA
 // ─────────────────────────────────────────────
 const APPS = [
-  { name: 'Airbnb',      category: 'Travel',       tags: ['Flat', 'Typographic'],      isNew: false, popularity: 9  },
-  { name: 'Uber',        category: 'Travel',       tags: ['Flat', 'Typographic'],      isNew: false, popularity: 10 },
-  { name: 'Deliveroo',   category: 'Food & Drink', tags: ['Illustrated', 'Flat'],      isNew: true,  popularity: 7  },
-  { name: 'Yelp',        category: 'Food & Drink', tags: ['Flat', 'Gradients'],        isNew: false, popularity: 6  },
+  { name: 'Airbnb',      category: 'Travel',       tags: ['Flat'],      isNew: false, popularity: 9  },
+  { name: 'Uber',        category: 'Travel',       tags: ['Typographic'],      isNew: false, popularity: 10 },
+  { name: 'Deliveroo',   category: 'Food & Drink', tags: ['Illustrated'],      isNew: true,  popularity: 7  },
+  { name: 'Yelp',        category: 'Food & Drink', tags: ['Flat', 'Typographic', 'Illustrated'],        isNew: false, popularity: 6  },
   { name: 'Robinhood',   category: 'Finance',      tags: ['Flat', 'Illustrated'],      isNew: true,  popularity: 8  },
   { name: 'Monzo',       category: 'Finance',      tags: ['Flat', 'Typographic'],      isNew: true,  popularity: 7  },
   { name: 'Revolut',     category: 'Finance',      tags: ['Flat', 'Gradients'],        isNew: false, popularity: 8  },
@@ -1393,6 +1444,43 @@ const APPS = [
   { name: 'Copilot',        category: 'AI', tags: ['Flat', 'Gradients'],        isNew: true,  popularity: 8  },
   { name: 'Gemini',         category: 'AI', tags: ['Flat', 'Gradients'],        isNew: true,  popularity: 9  },
   { name: 'Poe',            category: 'AI', tags: ['Flat', 'Typographic'],      isNew: false, popularity: 7  },
+    { name: 'TikTok',        category: 'Business',     tags: ['Flat', 'Typographic'],      isNew: false, popularity: 10 },
+  { name: 'Pinterest',     category: 'Business',     tags: ['Flat', 'Typographic'],      isNew: false, popularity: 9  },
+  { name: 'Snapchat',      category: 'Business',     tags: ['Flat', 'Illustrated'],      isNew: false, popularity: 9  },
+  { name: 'BeReal',        category: 'Business',     tags: ['Flat', 'Typographic'],      isNew: true,  popularity: 7  },
+
+  { name: 'Apple Maps',    category: 'Travel',       tags: ['Flat', 'Illustrated'],      isNew: false, popularity: 9  },
+  { name: 'Google Maps',   category: 'Travel',       tags: ['Flat', 'Illustrated'],      isNew: false, popularity: 10 },
+  { name: 'Lyft',          category: 'Travel',       tags: ['Flat', 'Typographic'],      isNew: false, popularity: 8  },
+  { name: 'Bolt',          category: 'Travel',       tags: ['Flat', 'Typographic'],      isNew: true,  popularity: 7  },
+
+  { name: 'DoorDash',      category: 'Food & Drink', tags: ['Flat', 'Typographic'],      isNew: false, popularity: 9  },
+  { name: 'Grubhub',       category: 'Food & Drink', tags: ['Flat', 'Illustrated'],      isNew: false, popularity: 7  },
+  { name: 'OpenTable',     category: 'Food & Drink', tags: ['Flat', 'Typographic'],      isNew: false, popularity: 8  },
+  { name: 'Resy',          category: 'Food & Drink', tags: ['Flat', 'Typographic'],      isNew: true,  popularity: 7  },
+
+  { name: 'Cash App',      category: 'Finance',      tags: ['Flat', 'Typographic'],      isNew: false, popularity: 9  },
+  { name: 'PayPal',        category: 'Finance',      tags: ['Flat', 'Typographic'],      isNew: false, popularity: 10 },
+  { name: 'Venmo',         category: 'Finance',      tags: ['Flat', 'Typographic'],      isNew: false, popularity: 9  },
+  { name: 'Nubank',        category: 'Finance',      tags: ['Flat', 'Gradients'],        isNew: true,  popularity: 8  },
+
+  { name: 'Canva',         category: 'Business',     tags: ['Flat', 'Gradients'],        isNew: false, popularity: 10 },
+  { name: 'Framer',        category: 'Business',     tags: ['Flat', 'Typographic'],      isNew: true,  popularity: 8  },
+  { name: 'Webflow',       category: 'Business',     tags: ['Flat', 'Typographic'],      isNew: false, popularity: 9  },
+  { name: 'Adobe Express', category: 'Business',     tags: ['Gradients', 'Flat'],        isNew: false, popularity: 8  },
+
+  { name: 'Arc',           category: 'Business',     tags: ['Flat', 'Illustrated'],      isNew: true,  popularity: 8  },
+  { name: 'Raycast',       category: 'Business',     tags: ['Flat', 'Gradients'],        isNew: true,  popularity: 8  },
+  { name: '1Password',     category: 'Business',     tags: ['Flat', 'Illustrated'],      isNew: false, popularity: 8  },
+
+  { name: 'YouTube',       category: 'Business',     tags: ['Flat', 'Typographic'],      isNew: false, popularity: 10 },
+  { name: 'Netflix',       category: 'Business',     tags: ['Flat', 'Typographic'],      isNew: false, popularity: 10 },
+  { name: 'Letterboxd',    category: 'Business',     tags: ['Flat', 'Illustrated'],      isNew: true,  popularity: 8  },
+
+  { name: 'CapCut',        category: 'AI',           tags: ['Flat', 'Typographic'],      isNew: true,  popularity: 9  },
+  { name: 'Luma AI',       category: 'AI',           tags: ['Gradients', 'Flat'],        isNew: true,  popularity: 8  },
+  { name: 'ElevenLabs',    category: 'AI',           tags: ['Flat', 'Typographic'],      isNew: true,  popularity: 8  },
+  { name: 'HeyGen',        category: 'AI',           tags: ['Gradients', 'Flat'],        isNew: true,  popularity: 7  },
   ];
 
 const WATCH_APPS = [
@@ -1479,6 +1567,28 @@ function toggleModalSave() {
   localStorage.setItem('savedIcons', JSON.stringify([...saved]));
   if (activeTab === 'saved') renderGrid();
   else renderGrid();
+}
+
+function toggleModalSaveText() {
+  if (!selectedApp) return;
+  const btn = document.getElementById('modalSaveTextBtn');
+  const iconBtn = document.getElementById('modalSaveBtn');
+  const saved = getSaved();
+  if (saved.has(selectedApp.name)) {
+    saved.delete(selectedApp.name);
+    btn.textContent = 'Save';
+    btn.classList.remove('saved');
+    iconBtn.classList.remove('saved');
+    iconBtn.querySelector('svg').setAttribute('fill', 'none');
+  } else {
+    saved.add(selectedApp.name);
+    btn.textContent = 'Saved';
+    btn.classList.add('saved');
+    iconBtn.classList.add('saved');
+    iconBtn.querySelector('svg').setAttribute('fill', 'currentColor');
+  }
+  localStorage.setItem('savedIcons', JSON.stringify([...saved]));
+  renderGrid();
 }
 
 // ─────────────────────────────────────────────
@@ -1747,6 +1857,10 @@ function openModal(app) {
   saveBtn.classList.toggle('saved', isSaved);
   saveBtn.querySelector('svg').setAttribute('fill', isSaved ? 'currentColor' : 'none');
 
+  const saveTextBtn = document.getElementById('modalSaveTextBtn');
+  saveTextBtn.textContent = isSaved ? 'Saved' : 'Save';
+  saveTextBtn.classList.toggle('saved', isSaved);
+
   const imgSrc = cache[app.name] || '';
   document.querySelectorAll('.modalImg-sm, .modalImg-md, .modalImg-lg').forEach(img => img.src = imgSrc);
 
@@ -1911,9 +2025,14 @@ document.querySelectorAll('.tab').forEach(tab => {
   });
 });
 
-// Desktop search pill opens overlay
-document.getElementById('navSearchPill').addEventListener('click', openSearchOverlay);
-document.getElementById('searchInput').addEventListener('focus', openSearchOverlay);
+let navSearchTimer;
+document.getElementById('searchInput').addEventListener('input', e => {
+  clearTimeout(navSearchTimer);
+  navSearchTimer = setTimeout(() => {
+    searchQuery = e.target.value.trim().toLowerCase();
+    renderGrid();
+  }, 160);
+});
 
 // Mobile search input — filters main grid directly
 let mobileSearchTimer;
@@ -1965,6 +2084,7 @@ document.getElementById('copyLinkBtn').addEventListener('click', () => {
 
 document.querySelectorAll('.os-btn[data-os]').forEach(btn => {
   btn.addEventListener('click', () => {
+    if (btn.dataset.os === 'watchos' || btn.dataset.os === 'visionos') return;
     activeOS = btn.dataset.os;
     document.querySelectorAll('.os-btn[data-os]').forEach(b => {
       b.classList.toggle('active', b.dataset.os === activeOS);
@@ -2033,6 +2153,26 @@ window.addEventListener('scroll', () => {
   document.getElementById('scrollTopBtn').classList.toggle('visible', window.scrollY > 400);
 });
 
+document.querySelectorAll('.os-btn[data-os="watchos"]').forEach(btn => {
+  const watchTooltip = document.getElementById('watchTooltip');
+  btn.addEventListener('mouseenter', () => watchTooltip.style.opacity = '1');
+  btn.addEventListener('mouseleave', () => watchTooltip.style.opacity = '0');
+  btn.addEventListener('mousemove', e => {
+    watchTooltip.style.left = (e.clientX + 14) + 'px';
+    watchTooltip.style.top  = (e.clientY + 14) + 'px';
+  });
+});
+
+document.querySelectorAll('.os-btn[data-os="visionos"]').forEach(btn => {
+  const visionTooltip = document.getElementById('visionTooltip');
+  btn.addEventListener('mouseenter', () => visionTooltip.style.opacity = '1');
+  btn.addEventListener('mouseleave', () => visionTooltip.style.opacity = '0');
+  btn.addEventListener('mousemove', e => {
+    visionTooltip.style.left = (e.clientX + 14) + 'px';
+    visionTooltip.style.top  = (e.clientY + 14) + 'px';
+  });
+});
+
 </script>
 
 <!-- ── floating button─────────────────────────────────────── -->
@@ -2053,8 +2193,15 @@ window.addEventListener('scroll', () => {
       </svg>
       <input type="text" id="sheetSearchInput" placeholder="Search categories..." oninput="filterSheetItems(this.value)">
     </div>
-    <div class="mobile-sheet-list" id="sheetList"></div>
+<div class="mobile-sheet-list" id="sheetList"></div>
   </div>
 </div>
+
+<footer style="border-top: var(--border); padding: 20px 40px; display: flex; align-items: center; justify-content: center; gap: 16px;">
+  <span style="font-size: 14px; color: #272727; font-family: var(--font); font-weight: 300;">
+    <b>More coming soon!</b> Made by <a href="https://www.linkedin.com/in/karen-dean-dc/" target="_blank" rel="noopener noreferrer" style="color: var(--black); font-weight: 600; text-decoration: none;">Karen ↗</a>
+  </span>
+</footer>
+
 </body>
 </html>
