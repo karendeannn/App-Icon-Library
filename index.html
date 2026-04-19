@@ -39,9 +39,14 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(17px);
-      -webkit-backdrop-filter: blur(15px);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.45);
+      transition: background 0.3s;
+    }
+
+    nav.scrolled {
+      background: rgba(255, 255, 255, 0.8);
     }
 
     .nav-logo {
@@ -122,6 +127,21 @@
     }
 
     .os-btn:hover:not(.active) { color: #555; }
+
+    /* ── Card description ──────────────────────────── */
+
+    .card-desc {
+      font-size: 12px;
+      color: var(--light-gray);
+      line-height: 1.4;
+      margin-top: 3px;
+      padding: 0 2px;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      min-height: 2.8em;
+    }
 
     /* ── SEARCH OVERLAY ──────────────────────────── */
     .search-overlay {
@@ -294,6 +314,37 @@
       max-width: 1280px;
       margin: 0 auto;
     }
+    /* ── Scroll to top button ───────────────────────────────── */
+      #scrollTopBtn {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    width: 44px;
+    height: 44px;
+    border-radius: 99px;
+    background: var(--black);
+    color: #f0f0f0;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(8px);
+    transition: opacity 0.2s, visibility 0.2s, transform 0.2s;
+    z-index: 99;
+  }
+
+  #scrollTopBtn.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  #scrollTopBtn:hover {
+    background: #333;
+  }
 
     /* ── FILTERS ─────────────────────────────────── */
     .filters {
@@ -449,11 +500,11 @@
     .grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 20px 16px;
+      gap: 60px 24px;
     }
 
     /* ── CARD ────────────────────────────────────── */
-    .card { cursor: pointer; }
+    .card { cursor: pointer; position: relative; }
 
     .card-thumb {
       width: 100%;
@@ -492,7 +543,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 8px;
-      padding: 0 2px;
+      padding: 0 12px;
     }
 
     .card-name {
@@ -515,28 +566,76 @@
       border-radius: 99px;
     }
     
-    .save-btn {
-      flex-shrink: 0;
-      font-size: 11px;
-      font-weight: 500;
-      color: var(--black);
-      background: var(--bg);
-      border: 0.5px solid #c8c8c8;
-      padding: 2.5px 9px;
-      border-radius: 99px;
-      cursor: pointer;
-      font-family: var(--font);
-      transition: all 0.1s;
-      white-space: nowrap;
-    }
+.card-actions {
+  position: absolute;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  opacity: 0;
+  transition: opacity 0.15s;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 2;
+}
 
-    .save-btn:hover { background: var(--pill-bg); }
+.card-action-btn {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--black);
+  background: #ffffff;
+  border-radius: 99px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-family: var(--font);
+  transition: background 0.1s;
+  border: none;
+}
 
-    .save-btn.saved {
-      background: var(--black);
-      color: var(--bg);
-      border-color: var(--black);
-    }
+.card:hover .card-actions { opacity: 1; pointer-events: auto; }
+
+.card-meta {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 0 2px;
+  margin-top: 10px;
+}
+
+.card-meta-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  flex-shrink: 0;
+  background: var(--card-bg);
+  object-fit: cover;
+}
+
+.card-meta-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.card-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--black);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-desc {
+  font-size: 14px;
+  color: #555;;
+  line-height: 1.4;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
 
     /* ── EMPTY ───────────────────────────────────── */
     .grid-empty {
@@ -566,11 +665,42 @@
     .modal-overlay.open { opacity: 1; visibility: visible; }
 
     /* ── MODAL ───────────────────────────────────── */
+
+    .modal-header-title {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .modal-desc {
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--light-gray);
+      letter-spacing: 0;
+      max-width: 320px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .modal-save-btn.saved {
+      background: var(--black);
+      color: #fff;
+    }
+
+    .modal-save-btn.saved:hover {
+      background: #000;
+    }
+    
+    .card-action-btn.card-action-save.saved {
+      background: #333;
+      color: #fff;
+    }
     .modal {
       background: var(--bg);
       border-radius: 18px;
       width: auto;
-      max-width: 100%;
+      max-width: 96vw;
       max-height: 90vh;
       display: flex;
       flex-direction: column;
@@ -628,7 +758,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 60px 100px 60px;
+      padding: 32px 60px;
+      overflow: hidden;
     }
 
     .modal-sizes {
@@ -666,9 +797,9 @@
       display: block;
     }
 
-    .size-sm { width: 40px;  height: 40px; }
-    .size-md { width: 200px; height: 200px; }
-    .size-lg { width: 500px; height: 500px; }
+    .size-sm { width: clamp(40px,  5vw,  60px);  height: clamp(40px,  5vw,  60px); }
+    .size-md { width: clamp(80px,  18vw, 200px); height: clamp(80px,  18vw, 200px); }
+    .size-lg { width: clamp(140px, 35vw, 460px); height: clamp(140px, 35vw, 460px); }
 
     .modal-footer {
       border-top: var(--border);
@@ -732,10 +863,15 @@
     .mobile-filter-row { display: none; }
 
     @media (max-width: 680px) {
-      .size-lg { width: 200px; height: 200px; }
+      .modal-sizes {
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+      }
+      .size-sm { width: 40px;  height: 40px;  display: flex; }
       .size-md { width: 100px; height: 100px; }
-      .size-sm { display: none; }
-      .modal-sizes { gap: 20px; }
+      .size-lg { width: 180px; height: 180px; }
+      .modal-icon-area { padding: 20px 24px; }
     }
 
     @media (max-width: 680px) {
@@ -841,6 +977,7 @@
         height: 72px;
         flex-shrink: 0;
         margin-bottom: 0;
+        position: relative;
       }
 
       .card-meta { flex: 1; }
@@ -854,9 +991,10 @@
         max-height: 90vh;
       }
 
-      .modal-icon-wrap { width: 200px; height: 200px; }
-
-      .modal-footer { flex-wrap: wrap; gap: 12px; }
+      .modal-footer {
+        flex-wrap: wrap; gap: 12px;
+        flex-direction: column;
+      }
 
       /* search modal full width on mobile */
       .search-modal {
@@ -874,6 +1012,111 @@
     .os-visionos .card-thumb{ border-radius: 38%; }
 
     .os-watchos .card-thumb { border-radius: 26%; }
+
+    .mobile-filter-sheet-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.3);
+  z-index: 400;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s, visibility 0.2s;
+}
+
+.mobile-filter-sheet-overlay.open { opacity: 1; visibility: visible; }
+
+.mobile-filter-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--bg);
+  border-radius: 20px 20px 0 0;
+  z-index: 401;
+  transform: translateY(100%);
+  transition: transform 0.25s cubic-bezier(0.32,0.72,0,1);
+  max-height: 75vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.mobile-filter-sheet-overlay.open .mobile-filter-sheet {
+  transform: translateY(0);
+}
+
+.mobile-sheet-handle {
+  width: 36px;
+  height: 4px;
+  background: #d0d0d0;
+  border-radius: 99px;
+  margin: 12px auto 0;
+  flex-shrink: 0;
+}
+
+.mobile-sheet-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 14px 16px 8px;
+  background: var(--pill-bg);
+  border-radius: 10px;
+  padding: 10px 14px;
+  flex-shrink: 0;
+}
+
+.mobile-sheet-search svg { color: var(--gray); flex-shrink: 0; }
+
+.mobile-sheet-search input {
+  border: none;
+  outline: none;
+  font-size: 15px;
+  font-family: var(--font);
+  background: transparent;
+  color: var(--black);
+  width: 100%;
+}
+
+.mobile-sheet-search input::placeholder { color: var(--light-gray); }
+
+.mobile-sheet-list {
+  overflow-y: auto;
+  flex: 1;
+  padding: 0 8px 24px;
+}
+
+.mobile-sheet-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--black);
+  transition: background 0.1s;
+}
+
+.mobile-sheet-item:hover { background: var(--pill-bg); }
+
+.mobile-sheet-checkbox {
+  width: 22px;
+  height: 22px;
+  border: 1.5px solid #d0d0d0;
+  border-radius: 6px;
+  flex-shrink: 0;
+  transition: all 0.1s;
+}
+
+.mobile-sheet-item.selected .mobile-sheet-checkbox {
+  background: var(--black);
+  border-color: var(--black);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 10 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 4l3 3 5-6' stroke='white' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 12px;
+}
+    
   </style>
 </head>
 <body>
@@ -1032,10 +1275,18 @@
     <div class="modal-header">
       <div class="modal-header-left">
         <div class="modal-logo-icon"></div>
-        <span id="modalTitle">App Icon Name</span>
+        <div class="modal-header-title">
+          <span id="modalTitle">App Icon Name</span>
+          <p id="modalDesc" class="modal-desc"></p>
+        </div>
       </div>
 
       <div class="modal-header-right">
+          <button class="icon-btn modal-save-btn" id="modalSaveBtn" title="Save" onclick="toggleModalSave()">
+          <svg width="12" height="14" viewBox="0 0 14 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 1h12v15l-6-4-6 4V1z"/>
+          </svg>
+        </button>
         <button class="icon-btn" id="copyLinkBtn" title="Copy link">
           <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6">
             <path d="M6.5 9.5a3.5 3.5 0 0 0 5 0l2-2a3.5 3.5 0 0 0-5-5l-1 1" stroke-linecap="round"/>
@@ -1056,19 +1307,19 @@
           <div class="modal-icon-wrap size-sm">
             <img class="modalImg-sm" src="" alt="">
           </div>
-          <span class="size-label">40 x 40px</span>
+          <span class="size-label">1x</span>
         </div>
         <div class="modal-size-item">
           <div class="modal-icon-wrap size-md">
             <img class="modalImg-md" src="" alt="">
           </div>
-          <span class="size-label">200 x 200px</span>
+          <span class="size-label">30x</span>
         </div>
         <div class="modal-size-item">
           <div class="modal-icon-wrap size-lg">
             <img class="modalImg-lg" src="" alt="">
           </div>
-          <span class="size-label">500 x 500px</span>
+          <span class="size-label">60x</span>
         </div>
       </div>
     </div>
@@ -1182,6 +1433,8 @@ const VISION_APPS = [
 //  STATE
 // ─────────────────────────────────────────────
 const cache        = {};
+const descCache = {};
+
 function getSaved() {
   try { return new Set(JSON.parse(localStorage.getItem('savedIcons') || '[]')); }
   catch { return new Set(); }
@@ -1210,6 +1463,24 @@ let activeOS       = 'ios';
 let selectedCats    = new Set();
 let selectedStyles  = new Set();
 
+function toggleModalSave() {
+  if (!selectedApp) return;
+  const btn = document.getElementById('modalSaveBtn');
+  const saved = getSaved();
+  if (saved.has(selectedApp.name)) {
+    saved.delete(selectedApp.name);
+    btn.classList.remove('saved');
+    btn.querySelector('svg').setAttribute('fill', 'none');
+  } else {
+    saved.add(selectedApp.name);
+    btn.classList.add('saved');
+    btn.querySelector('svg').setAttribute('fill', 'currentColor');
+  }
+  localStorage.setItem('savedIcons', JSON.stringify([...saved]));
+  if (activeTab === 'saved') renderGrid();
+  else renderGrid();
+}
+
 // ─────────────────────────────────────────────
 //  MOBILE DETECTION
 // ─────────────────────────────────────────────
@@ -1236,11 +1507,16 @@ async function fetchIcon(name) {
   try {
     const r    = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(name)}&entity=software&limit=1`);
     const data = await r.json();
-    const url  = data.results?.[0]?.artworkUrl512 ?? null;
+    const result = data.results?.[0];
+    const url  = result?.artworkUrl512 ?? null;
     cache[name] = url;
+    descCache[name] = result?.description
+      ? result.description.split('.')[0].trim().slice(0, 80)
+      : '';
     return url;
   } catch {
     cache[name] = null;
+    descCache[name] = '';
     return null;
   }
 }
@@ -1293,32 +1569,70 @@ function renderGrid() {
     const isSaved = saved.has(app.name);
     card.innerHTML = `
       <div class="card-thumb loading" id="${safeId}"></div>
+      <div class="card-actions">
+        <button class="card-action-btn card-action-save${isSaved ? ' saved' : ''}" 
+          onclick="event.stopPropagation();toggleSave('${app.name}',this)">
+          ${isSaved ? 'Saved' : 'Save'}
+        </button>
+        <button class="card-action-btn card-action-copy" 
+          onclick="event.stopPropagation();copyCardIcon('${app.name}',this)">
+          Copy
+        </button>
+      </div>
       <div class="card-meta">
-        <span class="card-name">${app.name}</span>
-        <button class="save-btn${isSaved ? ' saved' : ''}" onclick="event.stopPropagation();toggleSave('${app.name}',this)">${isSaved ? 'Saved' : 'Save'}</button>
+        <img class="card-meta-icon" id="meta-icon-${safeId}" src="" alt="">
+        <div class="card-meta-text">
+          <span class="card-name">${app.name}</span>
+          <p class="card-desc" id="desc-${safeId}"></p>
+        </div>
       </div>`;
     card.addEventListener('click', () => openModal(app));
     grid.appendChild(card);
 
     const thumbEl = () => document.getElementById(safeId);
     if (app.name in cache) {
-      applyThumb(thumbEl(), cache[app.name]);
-    } else {
-      fetchIcon(app.name).then(url => applyThumb(thumbEl(), url));
+    applyThumb(thumbEl(), cache[app.name], app.name);
+    // and:
+    fetchIcon(app.name).then(url => applyThumb(thumbEl(), url, app.name));
     }
   });
 }
 
-function applyThumb(el, url) {
+function applyThumb(el, url, name) {
   if (!el) return;
   el.classList.remove('loading');
   el.innerHTML = url ? `<img src="${url}" alt="" loading="lazy">` : '';
+  const safeId = `thumb-${name.replace(/[^a-z0-9]/gi, '_')}`;
+  const descEl = document.getElementById(`desc-${safeId}`);
+  if (descEl && descCache[name]) descEl.textContent = descCache[name];
+  const metaIcon = document.getElementById(`meta-icon-${safeId}`);
+  if (metaIcon && url) metaIcon.src = url;
 }
 
 function updateMobileCount(count) {
   const c = count !== undefined ? count : getVisible().length;
   const el = document.getElementById('mobileCount');
   if (el) el.textContent = `${c} app icon${c !== 1 ? 's' : ''}`;
+}
+
+// ─────────────────────────────────────────────
+//  copy function for card 
+// ─────────────────────────────────────────────
+
+async function copyCardIcon(name, btn) {
+  const url = cache[name];
+  if (!url) return;
+  const orig = btn.textContent;
+  btn.textContent = '...';
+  try {
+    const blob = await fetch(url).then(r => r.blob());
+    await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+    btn.textContent = 'Copied!';
+  } catch {
+    await navigator.clipboard.writeText(url).catch(() => {});
+    btn.textContent = 'Done';
+  }
+  setTimeout(() => btn.textContent = orig, 1500);
 }
 
 // ─────────────────────────────────────────────
@@ -1423,11 +1737,32 @@ function openModal(app) {
   document.getElementById('modalTags').innerHTML    = app.tags.map(t => `<span class="tag">${t}</span>`).join('');
   document.getElementById('copyBtn').textContent    = 'Copy';
 
+  // Set description
+    const descEl = document.getElementById('modalDesc');
+    if (descEl) descEl.textContent = descCache[app.name] || '';
+
+  // Set save button state
+  const saveBtn = document.getElementById('modalSaveBtn');
+  const isSaved = getSaved().has(app.name);
+  saveBtn.classList.toggle('saved', isSaved);
+  saveBtn.querySelector('svg').setAttribute('fill', isSaved ? 'currentColor' : 'none');
+
   const imgSrc = cache[app.name] || '';
   document.querySelectorAll('.modalImg-sm, .modalImg-md, .modalImg-lg').forEach(img => img.src = imgSrc);
+
+  // Update header logo
+  const logoEl = document.querySelector('.modal-logo-icon');
+  logoEl.style.backgroundImage = imgSrc ? `url(${imgSrc})` : '';
+  logoEl.style.backgroundSize = 'cover';
+  logoEl.style.backgroundPosition = 'center';
+  logoEl.style.background = imgSrc ? `url(${imgSrc}) center/cover` : 'var(--black)';
+
   if (!(app.name in cache)) {
     fetchIcon(app.name).then(url => {
-      if (url) document.querySelectorAll('.modalImg-sm, .modalImg-md, .modalImg-lg').forEach(img => img.src = url);
+      if (url) {
+        document.querySelectorAll('.modalImg-sm, .modalImg-md, .modalImg-lg').forEach(img => img.src = url);
+        logoEl.style.background = `url(${url}) center/cover`;
+      }
     });
   }
 
@@ -1648,9 +1983,78 @@ document.querySelectorAll('.os-btn[data-os]').forEach(btn => {
 
 // ─────────────────────────────────────────────
 //  INIT
-// ─────────────────────────────────────────────
+// ────────────────────────────────────────────
+
+const SHEET_CATS = ['AI','Travel & transportation','Food & Drink','Finance','Education','Business'];
+const SHEET_CAT_VALS = {'AI':'AI','Travel & transportation':'Travel','Food & Drink':'Food & Drink','Finance':'Finance','Education':'Education','Business':'Business'};
+
+function openMobileSheet() {
+  renderSheetItems('');
+  document.getElementById('sheetSearchInput').value = '';
+  document.getElementById('mobileSheetOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeMobileSheet() {
+  document.getElementById('mobileSheetOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function filterSheetItems(q) { renderSheetItems(q); }
+
+function renderSheetItems(q) {
+  const list = document.getElementById('sheetList');
+  const filtered = SHEET_CATS.filter(c => c.toLowerCase().includes(q.toLowerCase()));
+  list.innerHTML = filtered.map(label => {
+    const val = SHEET_CAT_VALS[label];
+    const sel = selectedCats.has(val);
+    return `<div class="mobile-sheet-item${sel ? ' selected' : ''}" onclick="toggleMobileSheetCat('${val}',this)">
+      <div class="mobile-sheet-checkbox"></div>${label}
+    </div>`;
+  }).join('');
+}
+
+function toggleMobileSheetCat(val, el) {
+  el.classList.toggle('selected');
+  if (selectedCats.has(val)) selectedCats.delete(val);
+  else selectedCats.add(val);
+  updateCatBtn();
+  renderPills();
+  renderGrid();
+  updateMobileCount();
+}
+
+document.getElementById('mobileFilterBtn').addEventListener('click', openMobileSheet);
+
 renderGrid();
 Promise.allSettled(APPS.map(a => fetchIcon(a.name))).then(() => renderGrid());
+window.addEventListener('scroll', () => {
+  document.querySelector('nav').classList.toggle('scrolled', window.scrollY > 10);
+  document.getElementById('scrollTopBtn').classList.toggle('visible', window.scrollY > 400);
+});
+
 </script>
+
+<!-- ── floating button─────────────────────────────────────── -->
+<button id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Scroll to top">
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="8" y1="13" x2="8" y2="3"/>
+    <polyline points="4,7 8,3 12,7"/>
+  </svg>
+</button>
+
+<!-- ── categories modal on mobile ─────────────────────────────────────── -->
+<div class="mobile-filter-sheet-overlay" id="mobileSheetOverlay" onclick="closeMobileSheet()">
+  <div class="mobile-filter-sheet" onclick="event.stopPropagation()">
+    <div class="mobile-sheet-handle"></div>
+    <div class="mobile-sheet-search">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8">
+        <circle cx="6.5" cy="6.5" r="5.2"/><path d="M11 11l3.2 3.2" stroke-linecap="round"/>
+      </svg>
+      <input type="text" id="sheetSearchInput" placeholder="Search categories..." oninput="filterSheetItems(this.value)">
+    </div>
+    <div class="mobile-sheet-list" id="sheetList"></div>
+  </div>
+</div>
 </body>
 </html>
